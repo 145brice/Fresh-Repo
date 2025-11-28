@@ -156,15 +156,15 @@ def random_morning_scrape():
     while True:
         now = time.localtime()
         if 5 <= now.tm_hour < 6:
-            sleep_minutes = random.randint(0, 30)
-            target_sec = (sleep_minutes * 60) + random.randint(0, 30)
+            # Sleep random seconds between 0 and 1800 (30 minutes) for no pattern
+            target_sec = random.randint(0, 1800)
             time.sleep(target_sec)
             
             for city in CITIES:
                 run_scraper(city)
             
-            # Sleep until next day
-            time.sleep(24 * 3600 - (time.time() % (24 * 3600)) + 5 * 3600)  # Next 5 AM
+            # Sleep until next day 5 AM
+            time.sleep(24 * 3600 - (time.time() % (24 * 3600)) + 5 * 3600)
         else:
             time.sleep(60)  # Check every minute
 

@@ -9,11 +9,12 @@ import random
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-city = sys.argv[1] if len(sys.argv) > 1 else 'nashville'
+city = sys.argv[1] if len(sys.argv) > 1 else 'austin'
 
 # Firebase init
-cred = credentials.Certificate(../serviceAccountKey.json)
-firebase_admin.initialize_app(cred)
+cred = credentials.Certificate('serviceAccountKey.json')
+if not firebase_admin._apps:
+    firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 # Firebase init
@@ -37,7 +38,7 @@ def scrape_permits():
     for item in data:
         permit = {
             'permit_number': item.get('permit_number', 'N/A'),
-            'address': item.get('permit_location', 'N/A') + ', Nashville, TN',
+            'address': item.get('permit_location', 'N/A') + ', Austin, TX',
             'type': item.get('permit_type_desc', 'N/A'),
             'value': f"${random.randint(50000, 300000)}"  # Random value since not in data
         }
@@ -46,8 +47,8 @@ def scrape_permits():
     # If no data, fall back to mock
     if not permits:
         permits = [
-            {'permit_number': '2025-12345', 'address': '123 Main St, Nashville, TN', 'type': 'Residential', 'value': '$100,000'},
-            {'permit_number': '2025-67890', 'address': '456 Oak Ave, Nashville, TN', 'type': 'Commercial', 'value': '$200,000'}
+            {'permit_number': '2025-12345', 'address': '123 Main St, Austin, TX', 'type': 'Residential', 'value': '$100,000'},
+            {'permit_number': '2025-67890', 'address': '456 Oak Ave, Austin, TX', 'type': 'Commercial', 'value': '$200,000'}
         ]
     
 

@@ -17,16 +17,18 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 # Firebase init
-cred = credentials.Certificate('../serviceAccountKey.json')
-firebase_admin.initialize_app(cred)
+cred = credentials.Certificate('serviceAccountKey.json')
+if not firebase_admin._apps:
+    firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 def scrape_permits():
     # Fetch real permit data from Austin's open data API (as proxy for real data)
     url = "https://data.austintexas.gov/resource/3syk-w9eu.json"
+    thirty_days_ago = (datetime.datetime.now() - datetime.timedelta(days=30)).strftime('%Y-%m-%dT%H:%M:%S')
     params = {
-        "$limit": 50,
-        "$where": "issue_date >= '2025-10-28T00:00:00'"  # Recent permits
+        "$limit": 5000,
+        "$where": f"issue_date >= '{thirty_days_ago}'"  # Last 30 days
     }
     response = requests.get(url, params=params)
     data = response.json()
@@ -62,7 +64,7 @@ def scrape_permits():
             'sent_date': datetime.date.today().isoformat()
         })
     
-    return new_permits[:50]  # Limit to 50 new ones
+    return new_permits  # Up to 5000 new ones
 
 
 def save_to_csv(permits):
