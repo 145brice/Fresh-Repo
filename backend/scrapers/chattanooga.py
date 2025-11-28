@@ -2,17 +2,31 @@ import os
 import sys
 import csv
 import datetime
+import firebase_admin
+from firebase_admin import credentials, firestore
 import requests
 import random
+import firebase_admin
+from firebase_admin import credentials, firestore
 
 city = sys.argv[1] if len(sys.argv) > 1 else 'chattanooga'
+
+# Firebase init
+cred = credentials.Certificate(../serviceAccountKey.json)
+firebase_admin.initialize_app(cred)
+db = firestore.client()
+
+# Firebase init
+cred = credentials.Certificate('../serviceAccountKey.json')
+firebase_admin.initialize_app(cred)
+db = firestore.client()
 
 def scrape_permits():
     # Fetch real permit data from Austin's open data API (as proxy for real data)
     url = "https://data.austintexas.gov/resource/3syk-w9eu.json"
     params = {
         "$limit": 50,
-        "$where": "issue_date >= '2025-11-26T00:00:00'"  # Recent permits
+        "$where": "issue_date >= '2025-10-28T00:00:00'"  # Recent permits
     }
     response = requests.get(url, params=params)
     data = response.json()
@@ -34,7 +48,22 @@ def scrape_permits():
             {'permit_number': '2025-67890', 'address': '456 Oak Ave, Chattanooga, TN', 'type': 'Commercial', 'value': '$200,000'}
         ]
     
-    return permits[:30]
+
+    # Filter out already sent permits
+    existing_docs = db.collection('sent_permits').where('city', '==', city).stream()
+    existing_nums = {doc.to_dict()['permit_number'] for doc in existing_docs}
+    new_permits = [p for p in permits if p['permit_number'] not in existing_nums]
+    
+    # Mark as sent
+    for p in new_permits:
+        db.collection('sent_permits').add({
+            'city': city,
+            'permit_number': p['permit_number'],
+            'sent_date': datetime.date.today().isoformat()
+        })
+    
+    return new_permits[:50]  # Limit to 50 new ones
+
 
 def save_to_csv(permits):
     date_str = datetime.date.today().isoformat()

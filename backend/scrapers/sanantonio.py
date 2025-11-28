@@ -2,17 +2,31 @@ import os
 import sys
 import csv
 import datetime
+import firebase_admin
+from firebase_admin import credentials, firestore
 import requests
 import random
+import firebase_admin
+from firebase_admin import credentials, firestore
 
 city = sys.argv[1] if len(sys.argv) > 1 else 'sanantonio'
+
+# Firebase init
+cred = credentials.Certificate(../serviceAccountKey.json)
+firebase_admin.initialize_app(cred)
+db = firestore.client()
+
+# Firebase init
+cred = credentials.Certificate('../serviceAccountKey.json')
+firebase_admin.initialize_app(cred)
+db = firestore.client()
 
 def scrape_permits():
     # Fetch real permit data from Austin's open data API (as proxy for real data)
     url = "https://data.austintexas.gov/resource/3syk-w9eu.json"
     params = {
         "$limit": 50,
-        "$where": "issue_date >= '2025-11-26T00:00:00'"  # Recent permits
+        "$where": "issue_date >= '2025-10-28T00:00:00'"  # Recent permits
     }
     response = requests.get(url, params=params)
     data = response.json()
@@ -21,7 +35,7 @@ def scrape_permits():
     for item in data:
         permit = {
             'permit_number': item.get('permit_number', 'N/A'),
-            'address': item.get('permit_location', 'N/A') + ', San Antonio, TX',
+            'address': item.get('permit_location', 'N/A') + ', San Antonio, TN',
             'type': item.get('permit_type_desc', 'N/A'),
             'value': f"${random.randint(50000, 300000)}"  # Random value since not in data
         }
@@ -30,11 +44,26 @@ def scrape_permits():
     # If no data, fall back to mock
     if not permits:
         permits = [
-            {'permit_number': '2025-12345', 'address': '123 Main St, San Antonio, TX', 'type': 'Residential', 'value': '$100,000'},
-            {'permit_number': '2025-67890', 'address': '456 Oak Ave, San Antonio, TX', 'type': 'Commercial', 'value': '$200,000'}
+            {'permit_number': '2025-12345', 'address': '123 Main St, San Antonio, TN', 'type': 'Residential', 'value': '$100,000'},
+            {'permit_number': '2025-67890', 'address': '456 Oak Ave, San Antonio, TN', 'type': 'Commercial', 'value': '$200,000'}
         ]
     
-    return permits[:30]
+
+    # Filter out already sent permits
+    existing_docs = db.collection('sent_permits').where('city', '==', city).stream()
+    existing_nums = {doc.to_dict()['permit_number'] for doc in existing_docs}
+    new_permits = [p for p in permits if p['permit_number'] not in existing_nums]
+    
+    # Mark as sent
+    for p in new_permits:
+        db.collection('sent_permits').add({
+            'city': city,
+            'permit_number': p['permit_number'],
+            'sent_date': datetime.date.today().isoformat()
+        })
+    
+    return new_permits[:50]  # Limit to 50 new ones
+
 
 def save_to_csv(permits):
     date_str = datetime.date.today().isoformat()
