@@ -12,6 +12,8 @@ from io import StringIO
 import resend
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Email, To, Content
+import firebase_admin
+from firebase_admin import credentials, firestore
 
 # === SETUP ===
 app = Flask(__name__, static_folder='../frontend')  # Adjust path to frontend
@@ -28,6 +30,11 @@ ADMIN_SECRET = os.getenv('ADMIN_SECRET', 'admin123')
 # Stripe setup
 stripe.api_key = STRIPE_SECRET_KEY
 resend.api_key = RESEND_API_KEY
+
+# Firebase setup
+cred = credentials.Certificate('serviceAccountKey.json')
+firebase_admin.initialize_app(cred)
+db = firestore.client()
 
 # Cities list - add new ones here
 CITIES = ['nashville', 'chattanooga', 'austin', 'sanantonio']  # expand forever
@@ -57,11 +64,13 @@ def webhook():
         email = data['customer_details']['email']
         city = data['metadata']['city'].lower()
         
-        # Save to local CSV
-        subs_file = f'subs/{city}.csv'
-        with open(subs_file, 'a', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow([city, email, datetime.datetime.now().isoformat()])
+        # Save to Firestore
+        doc_ref = db.collection('subscribers').document()
+        doc_ref.set({
+            'city': city,
+            'email': email,
+            'timestamp': datetime.datetime.now()
+        })
         
         print(f"New subscriber: {email} for {city}")
         
@@ -71,20 +80,29 @@ def webhook():
         
     return '', 200
 
+# === MANUAL SCRAPE ENDPOINT ===
+@app.route('/manual_scrape', methods=['GET'])
+def manual_scrape_endpoint():
+    secret = request.args.get('secret')
+    if secret != ADMIN_SECRET:
+        return jsonify({"error": "Unauthorized"}), 403
+    manual_scrape()
+    return jsonify({"status": "Manual scrape completed"})
+
 # === 2. CITY SCRAPER MANAGER ===
 def run_scraper(city):
     scraper_path = f'scrapers/{city}.py'
     if os.path.exists(scraper_path):
         try:
-            subprocess.run(['python', scraper_path, city], check=True)
+            subprocess.run(['python3', scraper_path, city], check=True)
         except subprocess.CalledProcessError as e:
             # Email alert on failure
-            resend.Emails.send(
-                from_='alert@yourdomain.com',
-                to=OWNER_EMAIL,
-                subject=f'ALERT: {city} scrape FAILED at {time.ctime()}',
-                text=f'Site returned error. Fix ASAP. Error: {e}'
-            )
+            resend.send({
+                "from": 'alert@yourdomain.com',
+                "to": OWNER_EMAIL,
+                "subject": f'ALERT: {city} scrape FAILED at {time.ctime()}',
+                "text": f'Site returned error. Fix ASAP. Error: {e}'
+            })
     else:
         print(f'No scraper for {city}')
 
@@ -102,15 +120,10 @@ def send_daily():
         yesterday = (datetime.date.today() - datetime.timedelta(days=1)).isoformat()
         csv_path = f'leads/{city}/{yesterday}.csv'
         if os.path.exists(csv_path):
-            # Get subscribers
-            subs_file = f'subs/{city}.csv'
-            emails = []
-            if os.path.exists(subs_file):
-                with open(subs_file, 'r') as f:
-                    reader = csv.reader(f)
-                    for row in reader:
-                        if len(row) >= 2:
-                            emails.append(row[1])
+            # Get subscribers from Firestore
+            subscribers_ref = db.collection('subscribers').where('city', '==', city)
+            docs = subscribers_ref.stream()
+            emails = [doc.to_dict()['email'] for doc in docs]
             
             if emails:
                 # Read CSV
