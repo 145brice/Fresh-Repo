@@ -5,7 +5,7 @@ import datetime
 import requests
 import random
 
-city = sys.argv[1] if len(sys.argv) > 1 else 'nashville'
+city = sys.argv[1] if len(sys.argv) > 1 else 'chattanooga'
 
 def scrape_permits():
     # Fetch real permit data from Austin's open data API (as proxy for real data)
@@ -21,7 +21,7 @@ def scrape_permits():
     for item in data:
         permit = {
             'permit_number': item.get('permit_number', 'N/A'),
-            'address': item.get('permit_location', 'N/A') + ', Nashville, TN',
+            'address': item.get('permit_location', 'N/A') + ', Chattanooga, TN',
             'type': item.get('permit_type_desc', 'N/A'),
             'value': f"${random.randint(50000, 300000)}"  # Random value since not in data
         }
@@ -30,8 +30,8 @@ def scrape_permits():
     # If no data, fall back to mock
     if not permits:
         permits = [
-            {'permit_number': '2025-12345', 'address': '123 Main St, Nashville, TN', 'type': 'Residential', 'value': '$100,000'},
-            {'permit_number': '2025-67890', 'address': '456 Oak Ave, Nashville, TN', 'type': 'Commercial', 'value': '$200,000'}
+            {'permit_number': '2025-12345', 'address': '123 Main St, Chattanooga, TN', 'type': 'Residential', 'value': '$100,000'},
+            {'permit_number': '2025-67890', 'address': '456 Oak Ave, Chattanooga, TN', 'type': 'Commercial', 'value': '$200,000'}
         ]
     
     return permits[:30]
