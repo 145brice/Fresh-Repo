@@ -4,7 +4,8 @@ import csv
 import datetime
 import firebase_admin
 from firebase_admin import credentials, firestore
-import randomimport requests
+import random
+import requests
 
 city = sys.argv[1] if len(sys.argv) > 1 else 'charlotte'
 
