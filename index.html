@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Contractor Leads - Building Permits Delivered at 8 AM</title>
-    <meta name="description" content="Get fresh building permits delivered daily. No cold calling. $47/month. Cancel anytime.">
+    <meta name="description" content="Get fresh building permits delivered daily. $47/month per city or $97 for all cities. Cancel anytime.">
     <style>
         * {
             margin: 0;
@@ -17,6 +17,7 @@
             line-height: 1.6;
             color: #1e293b;
             background: #ffffff;
+            padding-top: 80px;
         }
         
         /* Hero Section - High Converting */
@@ -86,24 +87,6 @@
         .hero .cta-primary:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-        }
-        
-        .login-link {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 8px 16px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.1);
-            transition: all 0.3s;
-        }
-        
-        .login-link:hover {
-            color: white;
-            background: rgba(255,255,255,0.2);
         }
         
         /* Trust Badge */
@@ -530,9 +513,19 @@
     </style>
 </head>
 <body>
+    <header style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 0; position: fixed; top: 0; width: 100%; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-size: 24px; font-weight: 800;">🏗️ Contractor Leads</div>
+            <nav style="display: flex; gap: 20px; align-items: center;">
+                <a href="/" style="color: white; text-decoration: none; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: background 0.3s;">Home</a>
+                <a href="/login" style="color: white; text-decoration: none; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: background 0.3s;">Login</a>
+                <a href="/signup" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: background 0.3s;">Sign Up</a>
+            </nav>
+        </div>
+    </header>
+    
     <!-- Hero Section -->
     <div class="hero">
-        <a href="/login" class="login-link">Login to Dashboard</a>
         <div class="container">
             <h1>Fresh Contractor Leads<br>Every Day at 8 AM</h1>
             <p class="subtitle">Building permits delivered to your inbox.<br>No cold calling. Just qualified leads ready to hire.</p>
@@ -551,7 +544,7 @@
             </div>
             <div class="stat-card">
                 <span class="stat-number">$47</span>
-                <span class="stat-label">Per Month</span>
+                <span class="stat-label">Per City/Month</span>
             </div>
             <div class="stat-card">
                 <span class="stat-number">7</span>
@@ -629,7 +622,7 @@
     <div class="cities" id="cities">
         <div class="container">
             <div class="section-header">
-                <h2>Choose Your City - $47/month</h2>
+                <h2>Choose Your City - $47/month or $97 for All Cities</h2>
                 <p>Start receiving fresh leads tomorrow morning</p>
             </div>
             
@@ -642,6 +635,21 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <tr>
+                            <td>
+                                <div class="state-name">All Cities Bundle</div>
+                            </td>
+                            <td>
+                                <div class="cities-list">
+                                    <div class="city-item">
+                                        <div class="city-name">Nashville, Chattanooga, Austin, San Antonio, Houston, Charlotte, Phoenix</div>
+                                        <div class="city-price">$97<span>/mo</span></div>
+                                        <p class="city-subtext">All 7 cities • Daily building permits • 8 AM delivery</p>
+                                        <a href="https://buy.stripe.com/placeholder-bundle-link" class="city-btn">Subscribe to All Cities Bundle</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
                         <tr>
                             <td>
                                 <div class="state-name">Tennessee</div>

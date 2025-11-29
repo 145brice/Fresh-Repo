@@ -11,6 +11,14 @@
   - Price ID: `price_________________`
 - [ ] Create San Antonio product ($47/month)
   - Price ID: `price_________________`
+- [ ] Create Houston product ($47/month)
+  - Price ID: `price_________________`
+- [ ] Create Charlotte product ($47/month)
+  - Price ID: `price_________________`
+- [ ] Create Phoenix product ($47/month)
+  - Price ID: `price_________________`
+- [ ] Create All Cities Bundle product ($97/month)
+  - Price ID: `price_________________`
 - [ ] Copy Stripe Secret Key: `sk_test_________________`
 
 ### 2. Firebase Setup

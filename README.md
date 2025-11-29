@@ -1,12 +1,12 @@
 # Contractor Leads SaaS - Deployment Guide
 
-Dead simple contractor leads platform. Four cities, $47/month each, daily email delivery.
+Dead simple contractor leads platform. Seven cities, $47/month each or $97 for all cities bundle, daily email delivery.
 
 ## Project Structure
 ```
 contractor-leads-saas/
 ├── frontend/
-│   ├── index.html          # Landing page with 4 city buttons
+│   ├── index.html          # Landing page with 7 city buttons + bundle
 │   └── success.html        # Post-checkout success page
 ├── backend/
 │   ├── app.py             # Flask app with webhook + cron
@@ -29,11 +29,15 @@ contractor-leads-saas/
 ## Step 1: Create Stripe Products
 
 1. Go to https://dashboard.stripe.com/test/products
-2. Create 4 products:
+2. Create 8 products:
    - **Nashville Contractor Leads** - $47/month recurring
    - **Chattanooga Contractor Leads** - $47/month recurring
    - **Austin Contractor Leads** - $47/month recurring
    - **San Antonio Contractor Leads** - $47/month recurring
+   - **Houston Contractor Leads** - $47/month recurring
+   - **Charlotte Contractor Leads** - $47/month recurring
+   - **Phoenix Contractor Leads** - $47/month recurring
+   - **All Cities Bundle** - $97/month recurring
 
 3. Copy each **Price ID** (starts with `price_`)
 

@@ -49,7 +49,11 @@ CITY_PRICE_MAP = {
     'price_NASHVILLE_TEST_ID': 'Nashville',
     'price_CHATTANOOGA_TEST_ID': 'Chattanooga',
     'price_AUSTIN_TEST_ID': 'Austin',
-    'price_SANANTONIO_TEST_ID': 'San Antonio'
+    'price_SANANTONIO_TEST_ID': 'San Antonio',
+    'price_HOUSTON_TEST_ID': 'Houston',
+    'price_CHARLOTTE_TEST_ID': 'Charlotte',
+    'price_PHOENIX_TEST_ID': 'Phoenix',
+    'price_BUNDLE_TEST_ID': 'all-cities'
 }
 
 @app.route('/create-checkout-session', methods=['POST'])
@@ -152,17 +156,18 @@ def webhook():
     
     return jsonify({'status': 'success'}), 200
 
-def get_mock_leads(city, count=10):
-    """Generate mock leads for demo purposes - replace with real data source"""
+def get_leads_for_city(city, count=10):
+    """Get leads for a city - replace with real scraper calls"""
+    # For now, using mock data - replace with actual scraper imports
     leads = []
     for i in range(count):
         leads.append({
-            'company': f'{city} Construction Co #{i+1}',
-            'contact': f'Contact Person {i+1}',
-            'phone': f'(555) {100+i:03d}-{1000+i:04d}',
-            'email': f'contact{i+1}@example.com',
-            'project_type': ['Residential', 'Commercial', 'Renovation'][i % 3],
-            'estimated_value': f'${(i+1) * 50000:,}'
+            'permit_number': f'P{city[:3].upper()}{1000+i}',
+            'address': f'{100+i} Main St, {city}',
+            'owner_name': f'Owner {i+1}',
+            'permit_type': ['Building', 'Electrical', 'Plumbing', 'Mechanical'][i % 4],
+            'permit_value': f'${(i+1) * 25000:,}',
+            'issue_date': datetime.now().strftime('%Y-%m-%d')
         })
     return leads
 
@@ -234,35 +239,77 @@ def send_daily_leads():
         
         # Send leads to each city's subscribers
         for city, emails in city_subscribers.items():
-            leads = get_mock_leads(city)
-            html_table = generate_html_table(leads)
-            
-            for email in emails:
-                try:
-                    message = Mail(
-                        from_email=Email(FROM_EMAIL),
-                        to_emails=To(email),
-                        subject=f'Your Daily {city} Contractor Leads - {datetime.now().strftime("%m/%d/%Y")}',
-                        html_content=f"""
-                        <html>
-                        <body style="font-family: Arial, sans-serif; padding: 20px;">
-                            <h2 style="color: #667eea;">Your Daily {city} Leads</h2>
-                            <p>Here are your fresh contractor leads for {datetime.now().strftime("%B %d, %Y")}:</p>
-                            {html_table}
-                            <hr style="margin: 30px 0;">
-                            <p style="color: #718096; font-size: 14px;">
-                                Need to cancel? Click the manage subscription link in your Stripe receipt.
-                            </p>
-                        </body>
-                        </html>
-                        """
-                    )
-                    
-                    sg = SendGridAPIClient(SENDGRID_API_KEY)
-                    sg.send(message)
-                    print(f"Sent leads to {email} for {city}")
-                except Exception as e:
-                    print(f"Error sending to {email}: {e}")
+            if city == 'all-cities':
+                # Bundle subscribers get leads from all cities
+                all_cities = ['Nashville', 'Chattanooga', 'Austin', 'San Antonio', 'Houston', 'Charlotte', 'Phoenix']
+                all_leads = []
+                for c in all_cities:
+                    leads = get_leads_for_city(c)
+                    all_leads.extend(leads)
+                
+                html_table = generate_html_table(all_leads)
+                subject = f'Your Daily All Cities Contractor Leads - {datetime.now().strftime("%m/%d/%Y")}'
+                body_city = "All Cities"
+                
+                for email in emails:
+                    try:
+                        message = Mail(
+                            from_email=Email(FROM_EMAIL),
+                            to_emails=To(email),
+                            subject=subject,
+                            html_content=f"""
+                            <html>
+                            <body style="font-family: Arial, sans-serif; padding: 20px;">
+                                <h2 style="color: #667eea;">Your Daily {body_city} Leads</h2>
+                                <p>Here are your fresh contractor leads for {datetime.now().strftime("%B %d, %Y")}:</p>
+                                {html_table}
+                                <hr style="margin: 30px 0;">
+                                <p style="color: #718096; font-size: 14px;">
+                                    Need to cancel? Click the manage subscription link in your Stripe receipt.
+                                </p>
+                            </body>
+                            </html>
+                            """
+                        )
+                        
+                        sg = SendGridAPIClient(SENDGRID_API_KEY)
+                        sg.send(message)
+                        print(f"Sent all cities leads to {email}")
+                    except Exception as e:
+                        print(f"Error sending to {email}: {e}")
+            else:
+                # Individual city subscribers
+                leads = get_leads_for_city(city)
+                html_table = generate_html_table(leads)
+                subject = f'Your Daily {city} Contractor Leads - {datetime.now().strftime("%m/%d/%Y")}'
+                body_city = city
+                
+                for email in emails:
+                    try:
+                        message = Mail(
+                            from_email=Email(FROM_EMAIL),
+                            to_emails=To(email),
+                            subject=subject,
+                            html_content=f"""
+                            <html>
+                            <body style="font-family: Arial, sans-serif; padding: 20px;">
+                                <h2 style="color: #667eea;">Your Daily {body_city} Leads</h2>
+                                <p>Here are your fresh contractor leads for {datetime.now().strftime("%B %d, %Y")}:</p>
+                                {html_table}
+                                <hr style="margin: 30px 0;">
+                                <p style="color: #718096; font-size: 14px;">
+                                    Need to cancel? Click the manage subscription link in your Stripe receipt.
+                                </p>
+                            </body>
+                            </html>
+                            """
+                        )
+                        
+                        sg = SendGridAPIClient(SENDGRID_API_KEY)
+                        sg.send(message)
+                        print(f"Sent leads to {email} for {city}")
+                    except Exception as e:
+                        print(f"Error sending to {email}: {e}")
         
         # Send master CSV to owner
         if all_subscribers_data:

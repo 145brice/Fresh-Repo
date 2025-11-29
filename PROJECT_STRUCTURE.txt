@@ -29,7 +29,7 @@ frontend/index.html
 -------------------
 - Clean landing page with gradient background
 - Four city buttons (Nashville, Chattanooga, Austin, San Antonio)
-- Each button triggers Stripe Checkout for $47/month
+- Each button triggers Stripe Checkout for $47/month per city or $97 for all cities bundle
 - No user accounts, no login, just payment
 - Must update: STRIPE_PRICE_IDS and BACKEND_URL before deploy
 
@@ -68,7 +68,7 @@ DEPLOYMENT FLOW
 ===============
 
 1. Setup Services (15 min)
-   - Create 4 Stripe products ($47/month each)
+   - Create 8 Stripe products ($47/month each for cities, $97 for all cities bundle)
    - Setup Firebase project + Firestore
    - Create SendGrid account + verify sender
 

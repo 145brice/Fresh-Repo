@@ -23,7 +23,7 @@ Have these open in browser tabs:
 
 ## Step 1: Stripe (5 min)
 
-1. **Create 4 Products** at https://dashboard.stripe.com/test/products
+1. **Create 8 Products** at https://dashboard.stripe.com/test/products
    - Click "Add product"
    - Name: "Nashville Contractor Leads"
    - Price: $47.00
@@ -31,7 +31,7 @@ Have these open in browser tabs:
    - Click "Add product"
    - **Copy the Price ID** (starts with `price_`)
    
-   Repeat for Chattanooga, Austin, San Antonio
+   Repeat for Chattanooga ($47), Austin ($47), San Antonio ($47), Houston ($47), Charlotte ($47), Phoenix ($47), and "All Cities Bundle" ($97)
 
 2. **Get your Secret Key**
    - Go to https://dashboard.stripe.com/test/apikeys

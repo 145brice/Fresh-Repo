@@ -50,7 +50,7 @@ USER SUBSCRIPTION FLOW
            ▼
   ┌──────────────────┐
   │  Stripe          │
-  │  Processing      │  ◄── Charges $47.00
+  │  Processing      │  ◄── Charges $47.00 per city or $97 for bundle
   └────────┬─────────┘
            │
            ├───────────────────────────┐
@@ -192,7 +192,7 @@ FAILED PAYMENT FLOW
 
   ┌──────────────────┐
   │  Stripe          │
-  │  Monthly Charge  │  ◄── Attempts to charge $47
+  │  Monthly Charge  │  ◄── Attempts to charge $47 per city or $97 for bundle
   └────────┬─────────┘
            │
            │ card declined / expired / insufficient funds
