@@ -434,6 +434,145 @@
             transform: scale(1.05);
         }
 
+        /* Urgency Badge */
+        .urgency-banner {
+            background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 14px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.9; }
+        }
+
+        /* Micro-CTA */
+        .micro-cta {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+        }
+
+        .micro-cta h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #1e293b;
+        }
+
+        .micro-cta p {
+            font-size: 18px;
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        .micro-cta-btn {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: white;
+            padding: 14px 40px;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .micro-cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        /* ROI Highlight */
+        .roi-highlight {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .roi-highlight h4 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .roi-highlight p {
+            font-size: 14px;
+            opacity: 0.95;
+            margin: 0;
+        }
+
+        /* Exit Intent Popup */
+        .exit-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .exit-popup-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .exit-popup-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #64748b;
+            line-height: 1;
+        }
+
+        .exit-popup h3 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: #1e293b;
+        }
+
+        .exit-popup p {
+            font-size: 18px;
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        .exit-popup-cta {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: white;
+            padding: 16px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
         /* Social Proof - Testimonials */
         .social-proof {
             padding: 80px 20px;
@@ -576,11 +715,38 @@
     <!-- Hero Section -->
     <div class="hero">
         <div class="container">
-            <h1>Fresh Contractor Leads<br>Every Day at 8 AM</h1>
-            <p class="subtitle">Building permits delivered to your inbox.<br>No cold calling. Just qualified leads ready to hire.</p>
-            <p class="subtext">300% more jobs. Zero contracts. Cancel anytime.</p>
-            <a href="#cities" class="cta-primary">Choose Your City →</a>
-            <p class="trust-badge">✓ Powered by Stripe • Cancel with one click</p>
+            <h1>Stop Cold Calling.<br>Get Fresh Leads Every Morning.</h1>
+            <p class="subtitle">Building permits delivered to your inbox at 8 AM.<br>Real homeowners ready to hire contractors.</p>
+            
+            <!-- Pricing Hero -->
+            <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; margin: 30px 0; border: 2px solid rgba(255,255,255,0.2);">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 16px; opacity: 0.9; margin-bottom: 10px;">Choose Your Plan</div>
+                    <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 14px; opacity: 0.8;">Single City</div>
+                            <div style="font-size: 32px; font-weight: 800; color: white;">$47<span style="font-size: 16px; font-weight: 500;">/mo</span></div>
+                        </div>
+                        <div style="text-align: center; position: relative;">
+                            <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: #10b981; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 700;">SAVE 80%</div>
+                            <div style="font-size: 14px; opacity: 0.8;">All 7 Cities</div>
+                            <div style="font-size: 36px; font-weight: 800; color: #10b981;">$97<span style="font-size: 16px; font-weight: 500;">/mo</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <a href="#cities" class="cta-primary" style="font-size: 22px; padding: 20px 60px; margin-bottom: 15px; display: inline-block;">Get Fresh Leads Now →</a>
+                    <div style="font-size: 14px; opacity: 0.9;">⚡ 8 AM delivery • Cancel anytime • No contracts</div>
+                </div>
+            </div>
+            
+            <!-- Urgency Banner -->
+            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.2);">
+                <div style="font-size: 18px; font-weight: 700; margin-bottom: 5px;">🚨 Limited Time: 50% Off First Month</div>
+                <div style="font-size: 14px; opacity: 0.9;">Use code LAUNCH50 at checkout</div>
+            </div>
+            
+            <p class="trust-badge">✓ 300+ contractors already getting leads • Powered by Stripe • Cancel with one click</p>
         </div>
     </div>
 
@@ -596,17 +762,161 @@
                 <span class="stat-label">Per City/Month</span>
             </div>
             <div class="stat-card">
-                <span class="stat-number">7</span>
-                <span class="stat-label">Cities Available</span>
-            </div>
-            <div class="stat-card">
                 <span class="stat-number">300%</span>
                 <span class="stat-label">More Jobs</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">24hrs</span>
+                <span class="stat-label">Money Back Guarantee</span>
             </div>
         </div>
     </div>
 
-    <!-- Benefits Section -->
+    <!-- Urgency Countdown -->
+    <div style="background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%); color: white; padding: 20px; text-align: center;">
+        <div class="container">
+            <h3 style="margin: 0 0 10px 0; font-size: 24px;">⏰ Launch Special Ends Soon!</h3>
+            <div style="font-size: 18px; margin-bottom: 15px;">50% off first month for the next <span id="countdown" style="font-weight: 800; font-size: 22px;">24:00:00</span></div>
+            <div style="font-size: 14px; opacity: 0.9;">Don't miss out on fresh leads starting tomorrow morning</div>
+        </div>
+    </div>
+
+    <!-- Micro-CTA Section -->
+    <div class="micro-cta">
+        <div class="container">
+            <h3>Ready to See Which Cities Are Available?</h3>
+            <p>See pricing and choose your city below</p>
+            <a href="#cities" class="micro-cta-btn">View Cities & Pricing →</a>
+        </div>
+    </div>
+
+    <!-- Cities Section - MOVED UP FOR FASTER CONVERSION -->
+    <div class="cities" id="cities">
+        <div class="container">
+            <!-- Urgency Banner -->
+            <div class="urgency-banner">
+                ⚡ Limited spots available - Join before capacity fills up
+            </div>
+
+            <div class="section-header">
+                <h2>Choose Your City - $47/month or $97 for All Cities</h2>
+                <p>Start receiving fresh leads tomorrow morning</p>
+            </div>
+
+            <div class="cities-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>State</th>
+                            <th>Cities Available</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bundle-row">
+                            <td colspan="2">
+                                <div class="cities-list">
+                                    <div class="city-item">
+                                        <div class="bundle-badge">🔥 Best Value - Save 80%</div>
+                                        <div class="city-name">All Cities Bundle</div>
+                                        <div style="font-size: 14px; color: #64748b; margin-bottom: 8px;">Nashville, Chattanooga, Austin, San Antonio, Houston, Charlotte, Phoenix</div>
+                                        <div class="city-price">$97<span>/mo</span></div>
+                                        <p class="city-subtext">All 7 cities • Daily building permits • 8 AM delivery • Regular price would be $329/mo</p>
+                                        <div class="roi-highlight" style="margin: 15px 0;">
+                                            <h4>💰 You'll Get Paid Back on Your First Lead</h4>
+                                            <p>Typical permit value: $150K+ • Your commission: $4,500+</p>
+                                        </div>
+                                        <a href="https://buy.stripe.com/placeholder-bundle-link" class="city-btn">🚀 Get All Cities Now - Save $232/mo</a>
+                                        <div style="text-align: center; margin-top: 10px; font-size: 12px; color: #64748b;">⚡ First leads delivered tomorrow at 8 AM</div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr style="height: 20px;"></tr>
+                        <tr>
+                            <td>
+                                <div class="state-name">Tennessee</div>
+                            </td>
+                            <td>
+                                <div class="cities-list">
+                                    <div class="city-item">
+                                        <div class="city-name">Nashville</div>
+                                        <div class="city-price">$47<span>/mo</span></div>
+                                        <p class="city-subtext">Daily building permits • 8 AM delivery</p>
+                                        <a href="https://buy.stripe.com/dRm28t7Lqbyz1HIdPp63K0r" class="city-btn">Subscribe to Nashville</a>
+                                    </div>
+                                    <div class="city-item">
+                                        <div class="city-name">Chattanooga</div>
+                                        <div class="city-price">$47<span>/mo</span></div>
+                                        <p class="city-subtext">Daily building permits • 8 AM delivery</p>
+                                        <a href="https://buy.stripe.com/28E6oJ7Lq4678669z963K0s" class="city-btn">Subscribe to Chattanooga</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="state-name">Texas</div>
+                            </td>
+                            <td>
+                                <div class="cities-list">
+                                    <div class="city-item">
+                                        <div class="city-name">Austin</div>
+                                        <div class="city-price">$47<span>/mo</span></div>
+                                        <p class="city-subtext">Daily building permits • 8 AM delivery</p>
+                                        <a href="https://buy.stripe.com/4gMfZjfdSbyzbiih1B63K0t" class="city-btn">Subscribe to Austin</a>
+                                    </div>
+                                    <div class="city-item">
+                                        <div class="city-name">San Antonio</div>
+                                        <div class="city-price">$47<span>/mo</span></div>
+                                        <p class="city-subtext">Daily building permits • 8 AM delivery</p>
+                                        <a href="https://buy.stripe.com/3cI9AV8Pubyzeuu5iT63K0u" class="city-btn">Subscribe to San Antonio</a>
+                                    </div>
+                                    <div class="city-item">
+                                        <div class="city-name">Houston</div>
+                                        <div class="city-price">$47<span>/mo</span></div>
+                                        <p class="city-subtext">Daily building permits • 8 AM delivery</p>
+                                        <a href="https://buy.stripe.com/3cIaEZ6HmgST7223aL63K0v" class="city-btn">Subscribe to Houston</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="state-name">North Carolina</div>
+                            </td>
+                            <td>
+                                <div class="cities-list">
+                                    <div class="city-item">
+                                        <div class="city-name">Charlotte</div>
+                                        <div class="city-price">$47<span>/mo</span></div>
+                                        <p class="city-subtext">Daily building permits • 8 AM delivery</p>
+                                        <a href="https://buy.stripe.com/7sY4gBghWdGHdqq8v563K0w" class="city-btn">Subscribe to Charlotte</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="state-name">Arizona</div>
+                            </td>
+                            <td>
+                                <div class="cities-list">
+                                    <div class="city-item">
+                                        <div class="city-name">Phoenix</div>
+                                        <div class="city-price">$47<span>/mo</span></div>
+                                        <p class="city-subtext">Daily building permits • 8 AM delivery</p>
+                                        <a href="https://buy.stripe.com/cNi7sN0iY9qr1HIcLl63K0x" class="city-btn">Subscribe to Phoenix</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sample Lead Demo - Enhanced with ROI -->
     <div class="benefits">
         <div class="container">
             <div class="section-header">
@@ -792,19 +1102,19 @@
             
             <div class="testimonials">
                 <div class="testimonial">
-                    <p class="testimonial-text">"This service doubled my leads overnight. I went from 2 jobs a month to 8. Highly recommend!"</p>
+                    <p class="testimonial-text">"This service doubled my leads overnight. I went from 2 jobs a month to 8. The $97 bundle was the best investment I've made!"</p>
                     <p class="testimonial-author">Mike R.</p>
                     <p class="testimonial-role">Nashville Contractor</p>
                 </div>
                 
                 <div class="testimonial">
-                    <p class="testimonial-text">"Fresh permits every morning? Game changer. No more hunting for work - it comes to me."</p>
+                    <p class="testimonial-text">"Fresh permits every morning? Game changer. No more hunting for work - it comes to me. Worth every penny of the $47."</p>
                     <p class="testimonial-author">Sarah L.</p>
                     <p class="testimonial-role">Austin Remodeling</p>
                 </div>
                 
                 <div class="testimonial">
-                    <p class="testimonial-text">"Easy to cancel if it doesn't work. But it does. Best $47 I've spent."</p>
+                    <p class="testimonial-text">"Easy to cancel if it doesn't work. But it does. Best money I've spent on marketing. The leads are gold!"</p>
                     <p class="testimonial-author">John D.</p>
                     <p class="testimonial-role">Chattanooga Builder</p>
                 </div>
@@ -840,6 +1150,53 @@
                 }
             });
         });
+
+        // Countdown Timer
+        function updateCountdown() {
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(0, 0, 0, 0);
+            
+            const diff = tomorrow - now;
+            
+            if (diff > 0) {
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                
+                document.getElementById('countdown').textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            } else {
+                document.getElementById('countdown').textContent = 'EXPIRED';
+            }
+        }
+        
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // Exit Intent Popup
+        let exitIntentShown = false;
+        document.addEventListener('mouseleave', function(e) {
+            if (e.clientY < 0 && !exitIntentShown) {
+                exitIntentShown = true;
+                showExitPopup();
+            }
+        });
+
+        function showExitPopup() {
+            const popup = document.createElement('div');
+            popup.className = 'exit-popup';
+            popup.innerHTML = `
+                <div class="exit-popup-content">
+                    <div class="exit-popup-close" onclick="this.parentElement.parentElement.remove()">×</div>
+                    <h3>Wait! Don't Miss Out on Fresh Leads</h3>
+                    <p>Get your first month 50% off with code LAUNCH50. Leads start arriving tomorrow at 8 AM.</p>
+                    <a href="#cities" class="exit-popup-cta" onclick="this.parentElement.parentElement.remove()">Claim My Discount →</a>
+                </div>
+            `;
+            document.body.appendChild(popup);
+        }
     </script>
 </body>
 </html>
