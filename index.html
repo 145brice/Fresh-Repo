@@ -697,6 +697,24 @@
             .sample-header h2 {
                 font-size: 24px;
             }
+
+            /* Mobile pricing layout */
+            .hero .pricing-hero {
+                padding: 20px;
+            }
+
+            .hero .pricing-hero .pricing-grid {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .hero .pricing-hero .pricing-option {
+                max-width: 100%;
+            }
+
+            .hero .pricing-hero .pricing-option .price {
+                font-size: 32px;
+            }
         }
     </style>
 </head>
@@ -719,24 +737,26 @@
             <p class="subtitle">Building permits delivered to your inbox at 8 AM.<br>Real homeowners ready to hire contractors.</p>
             
             <!-- Pricing Hero -->
-            <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; margin: 30px 0; border: 2px solid rgba(255,255,255,0.2);">
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <div style="font-size: 16px; opacity: 0.9; margin-bottom: 10px;">Choose Your Plan</div>
-                    <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
-                        <div style="text-align: center;">
-                            <div style="font-size: 14px; opacity: 0.8;">Single City</div>
-                            <div style="font-size: 32px; font-weight: 800; color: white;">$47<span style="font-size: 16px; font-weight: 500;">/mo</span></div>
+            <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 20px; padding: 40px; margin: 30px 0; border: 2px solid rgba(255,255,255,0.2);">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div style="font-size: 18px; font-weight: 700; margin-bottom: 20px; color: white;">Choose Your Plan</div>
+                    <div style="display: flex; justify-content: center; align-items: flex-end; gap: 60px; flex-wrap: wrap;">
+                        <div style="text-align: center; flex: 1; max-width: 200px;">
+                            <div style="font-size: 16px; opacity: 0.9; margin-bottom: 15px; color: white;">Single City</div>
+                            <div style="font-size: 36px; font-weight: 800; color: white; margin-bottom: 10px;">$47<span style="font-size: 18px; font-weight: 500;">/mo</span></div>
+                            <div style="font-size: 14px; opacity: 0.8; color: white;">Any one city</div>
                         </div>
-                        <div style="text-align: center; position: relative;">
-                            <div style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); background: #10b981; color: white; padding: 6px 14px; border-radius: 16px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; z-index: 10; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);">SAVE 80%</div>
-                            <div style="font-size: 14px; opacity: 0.8; margin-top: 10px;">All 7 Cities</div>
-                            <div style="font-size: 36px; font-weight: 800; color: #10b981;">$97<span style="font-size: 16px; font-weight: 500;">/mo</span></div>
+                        <div style="text-align: center; flex: 1; max-width: 200px; position: relative;">
+                            <div style="background: #10b981; color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);">SAVE 80%</div>
+                            <div style="font-size: 16px; opacity: 0.9; margin-bottom: 15px; color: #10b981; font-weight: 600;">All 7 Cities</div>
+                            <div style="font-size: 42px; font-weight: 800; color: #10b981; margin-bottom: 10px;">$97<span style="font-size: 18px; font-weight: 500;">/mo</span></div>
+                            <div style="font-size: 14px; opacity: 0.8; color: white;">Best Value</div>
                         </div>
                     </div>
                 </div>
                 <div style="text-align: center;">
-                    <a href="#cities" class="cta-primary" style="font-size: 22px; padding: 20px 60px; margin-bottom: 15px; display: inline-block;">Get Fresh Leads Now →</a>
-                    <div style="font-size: 14px; opacity: 0.9;">⚡ 8 AM delivery • Cancel anytime • No contracts</div>
+                    <a href="#cities" class="cta-primary" style="font-size: 24px; padding: 20px 60px; margin-bottom: 15px; display: inline-block;">Get Fresh Leads Now →</a>
+                    <div style="font-size: 14px; opacity: 0.9; color: white;">⚡ 8 AM delivery • Cancel anytime • No contracts</div>
                 </div>
             </div>
             
