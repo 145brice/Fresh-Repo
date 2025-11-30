@@ -11,6 +11,10 @@ import pytz
 from apscheduler.schedulers.background import BackgroundScheduler
 import csv
 from io import StringIO
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -22,23 +26,9 @@ SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 OWNER_EMAIL = os.getenv('OWNER_EMAIL')
 FROM_EMAIL = os.getenv('FROM_EMAIL')
 
-# Firebase credentials from environment
-firebase_creds = {
-    "type": "service_account",
-    "project_id": os.getenv('FIREBASE_PROJECT_ID'),
-    "private_key_id": os.getenv('FIREBASE_PRIVATE_KEY_ID'),
-    "private_key": os.getenv('FIREBASE_PRIVATE_KEY').replace('\\n', '\n'),
-    "client_email": os.getenv('FIREBASE_CLIENT_EMAIL'),
-    "client_id": os.getenv('FIREBASE_CLIENT_ID'),
-    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-    "token_uri": "https://oauth2.googleapis.com/token",
-    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-    "client_x509_cert_url": os.getenv('FIREBASE_CERT_URL')
-}
-
-# Initialize Firebase
+# Firebase credentials from service account key file
 if not firebase_admin._apps:
-    cred = credentials.Certificate(firebase_creds)
+    cred = credentials.Certificate('serviceAccountKey.json')
     firebase_admin.initialize_app(cred)
 
 db = firestore.client()
@@ -103,30 +93,230 @@ def webhook():
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
         
-        # Get customer details
-        customer_id = session['customer']
-        customer = stripe.Customer.retrieve(customer_id)
-        email = customer['email']
+        # Check if this is a subscription or one-time payment
+        if session.get('mode') == 'subscription':
+            # Handle subscription payment
+            customer_id = session['customer']
+            customer = stripe.Customer.retrieve(customer_id)
+            email = customer['email']
+            
+            # Get subscription to find the price ID
+            subscription_id = session['subscription']
+            subscription = stripe.Subscription.retrieve(subscription_id)
+            price_id = subscription['items']['data'][0]['price']['id']
+            
+            # Map price ID to city
+            city = CITY_PRICE_MAP.get(price_id, session['metadata'].get('city', 'Unknown'))
+            
+            # Save to Firestore
+            db.collection('subscribers').document(customer_id).set({
+                'email': email,
+                'city': city,
+                'stripe_customer_id': customer_id,
+                'subscription_id': subscription_id,
+                'active': True,
+                'created_at': firestore.SERVER_TIMESTAMP
+            })
+            
+            print(f"New subscriber: {email} for {city}")
         
-        # Get subscription to find the price ID
-        subscription_id = session['subscription']
-        subscription = stripe.Subscription.retrieve(subscription_id)
-        price_id = subscription['items']['data'][0]['price']['id']
-        
-        # Map price ID to city
-        city = CITY_PRICE_MAP.get(price_id, session['metadata'].get('city', 'Unknown'))
-        
-        # Save to Firestore
-        db.collection('subscribers').document(customer_id).set({
-            'email': email,
-            'city': city,
-            'stripe_customer_id': customer_id,
-            'subscription_id': subscription_id,
-            'active': True,
-            'created_at': firestore.SERVER_TIMESTAMP
-        })
-        
-        print(f"New subscriber: {email} for {city}")
+        elif session.get('mode') == 'payment':
+            # Handle one-time payment (like our $1 test)
+            customer_email = session.get('customer_details', {}).get('email')
+            if not customer_email:
+                # For one-time payments without customer creation
+                customer_email = session.get('metadata', {}).get('email', 'test@example.com')
+            
+            # Get payment details
+            amount_total = session.get('amount_total', 0) / 100  # Convert from cents
+
+            # For $97 All Cities Bundle
+            if amount_total == 97.00:
+                city = 'All Cities Bundle'
+                all_cities = ['Nashville', 'Chattanooga', 'Austin', 'San Antonio', 'Houston', 'Charlotte', 'Phoenix']
+
+                # Create a customer ID for Firebase
+                customer_id = f"allcities_{customer_email.replace('@', '_').replace('.', '_')}_{int(datetime.now().timestamp())}"
+
+                # Save to Firestore
+                db.collection('subscribers').document(customer_id).set({
+                    'email': customer_email,
+                    'city': city,
+                    'cities': all_cities,
+                    'stripe_customer_id': customer_id,
+                    'subscription_id': session.get('subscription'),
+                    'active': True,
+                    'amount_paid': amount_total,
+                    'created_at': firestore.SERVER_TIMESTAMP
+                })
+
+                # Create bundle folder
+                import os
+                bundle_dir = os.path.join('leads', 'allcitiesbundle')
+                os.makedirs(bundle_dir, exist_ok=True)
+
+                # Create client file with leads from all cities
+                client_data = f"""New All Cities Bundle Subscriber: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+Email: {customer_email}
+Plan: All Cities Bundle
+Cities: {', '.join(all_cities)}
+Amount Paid: ${amount_total}
+Subscription Active: Yes
+
+Welcome! You'll receive daily contractor leads from ALL 7 cities starting tomorrow at 8 AM.
+
+"""
+
+                # Collect leads from all cities
+                all_leads = []
+                for city_name in all_cities:
+                    city_leads = get_leads_for_city(city_name, count=5)
+                    all_leads.extend(city_leads)
+
+                    # Add to client file
+                    client_data += f"\n--- {city_name} Sample Leads ---\n"
+                    for lead in city_leads:
+                        client_data += f"""
+Permit: {lead['permit_number']}
+Address: {lead['address']}
+Owner: {lead.get('owner_name', 'N/A')}
+Type: {lead['permit_type']}
+Value: {lead['permit_value']}
+Date: {lead['issue_date']}
+"""
+
+                # Save to file
+                filename = f"subscriber_{int(datetime.now().timestamp())}.txt"
+                filepath = os.path.join(bundle_dir, filename)
+                with open(filepath, 'w') as f:
+                    f.write(client_data)
+
+                print(f"✅ Created Firebase record and local file for All Cities Bundle subscriber: {customer_email}")
+
+                # Generate HTML tables for each city
+                html_content = f"""
+                <html>
+                <body style="font-family: Arial, sans-serif; padding: 20px;">
+                    <h2 style="color: #667eea;">Welcome to Contractor Leads - All Cities Bundle! 🎉</h2>
+                    <p>Thank you for subscribing to our All Cities Bundle! You now have access to fresh leads from all 7 cities.</p>
+                    <p><strong>Your cities:</strong> {', '.join(all_cities)}</p>
+                    <p>Below are sample leads from each city. You'll receive daily leads at 8 AM.</p>
+                """
+
+                for city_name in all_cities:
+                    city_leads = get_leads_for_city(city_name, count=3)
+                    if city_leads:
+                        html_content += f"<h3 style='color: #667eea; margin-top: 30px;'>{city_name}</h3>"
+                        html_content += generate_html_table(city_leads)
+
+                html_content += """
+                    <hr style="margin: 30px 0;">
+                    <p style="color: #718096; font-size: 14px;">
+                        Your All Cities Bundle subscription is now active. Daily leads from all 7 cities will be delivered to this email address at 8 AM.
+                    </p>
+                </body>
+                </html>
+                """
+
+                try:
+                    message = Mail(
+                        from_email=Email(FROM_EMAIL),
+                        to_emails=To(customer_email),
+                        subject='Welcome to Contractor Leads - All Cities Bundle! 🎉',
+                        html_content=html_content
+                    )
+
+                    sg = SendGridAPIClient(SENDGRID_API_KEY)
+                    sg.send(message)
+                    print(f"✅ Sent All Cities Bundle welcome email to {customer_email}")
+                except Exception as e:
+                    print(f"❌ Error sending welcome email to {customer_email}: {e}")
+
+            # For $47 payments (Austin, San Antonio, Houston, etc.)
+            elif amount_total == 47.00:
+                # Determine city from session metadata or default to Austin
+                city = session.get('metadata', {}).get('city', 'Austin')
+
+                # Create a customer ID for Firebase
+                city_slug = city.lower().replace(' ', '')
+                customer_id = f"{city_slug}_{customer_email.replace('@', '_').replace('.', '_')}_{int(datetime.now().timestamp())}"
+
+                # Save to Firestore
+                db.collection('subscribers').document(customer_id).set({
+                    'email': customer_email,
+                    'city': city,
+                    'stripe_customer_id': customer_id,
+                    'subscription_id': session.get('subscription'),
+                    'active': True,
+                    'amount_paid': amount_total,
+                    'created_at': firestore.SERVER_TIMESTAMP
+                })
+
+                # Add to local city folder (create if doesn't exist)
+                import os
+                city_dir = os.path.join('leads', city_slug)
+                os.makedirs(city_dir, exist_ok=True)
+
+                # Create a client file
+                client_data = f"""New {city} Subscriber: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+Email: {customer_email}
+City: {city}
+Amount Paid: ${amount_total}
+Subscription Active: Yes
+
+Welcome! You'll receive daily contractor leads starting tomorrow at 8 AM.
+"""
+                
+                # Get sample leads and add to file
+                leads = get_leads_for_city(city, count=5)
+                for lead in leads:
+                    client_data += f"""
+Permit: {lead['permit_number']}
+Address: {lead['address']}
+Owner: {lead['owner_name']}
+Type: {lead['permit_type']}
+Value: {lead['permit_value']}
+Date: {lead['issue_date']}
+"""
+                
+                # Save to file
+                filename = f"subscriber_{int(datetime.now().timestamp())}.txt"
+                filepath = os.path.join(city_dir, filename)
+                with open(filepath, 'w') as f:
+                    f.write(client_data)
+
+                print(f"✅ Created Firebase record and local file for {city} subscriber: {customer_email}")
+
+                # Get sample leads for welcome email
+                html_table = generate_html_table(leads)
+
+                try:
+                    message = Mail(
+                        from_email=Email(FROM_EMAIL),
+                        to_emails=To(customer_email),
+                        subject=f'Welcome to Contractor Leads - {city}!',
+                        html_content=f"""
+                        <html>
+                        <body style="font-family: Arial, sans-serif; padding: 20px;">
+                            <h2 style="color: #667eea;">Welcome to Contractor Leads - {city}!</h2>
+                            <p>Thank you for subscribing! Here are your first 5 sample leads. You'll receive fresh leads daily at 8 AM.</p>
+                            {html_table}
+                            <hr style="margin: 30px 0;">
+                            <p style="color: #718096; font-size: 14px;">
+                                Your subscription is now active. Daily leads will be delivered to this email address.
+                            </p>
+                        </body>
+                        </html>
+                        """
+                    )
+                    
+                    sg = SendGridAPIClient(SENDGRID_API_KEY)
+                    sg.send(message)
+                    print(f"✅ Sent welcome email to {customer_email}")
+                except Exception as e:
+                    print(f"❌ Error sending welcome email to {customer_email}: {e}")
+            
+            print(f"One-time payment completed: ${amount_total} to {customer_email}")
     
     # Handle failed payment
     elif event['type'] == 'invoice.payment_failed':
@@ -157,18 +347,56 @@ def webhook():
     return jsonify({'status': 'success'}), 200
 
 def get_leads_for_city(city, count=10):
-    """Get leads for a city - replace with real scraper calls"""
-    # For now, using mock data - replace with actual scraper imports
+    """Get REAL leads from scraped CSV files"""
     leads = []
-    for i in range(count):
-        leads.append({
-            'permit_number': f'P{city[:3].upper()}{1000+i}',
-            'address': f'{100+i} Main St, {city}',
-            'owner_name': f'Owner {i+1}',
-            'permit_type': ['Building', 'Electrical', 'Plumbing', 'Mechanical'][i % 4],
-            'permit_value': f'${(i+1) * 25000:,}',
-            'issue_date': datetime.now().strftime('%Y-%m-%d')
-        })
+
+    try:
+        # Get the most recent CSV file for the city
+        city_lower = city.lower()
+        leads_dir = f'leads/{city_lower}'
+
+        if not os.path.exists(leads_dir):
+            print(f"⚠️  No leads directory found for {city}")
+            return []
+
+        # Find most recent date folder
+        date_folders = [d for d in os.listdir(leads_dir) if os.path.isdir(os.path.join(leads_dir, d))]
+        if not date_folders:
+            print(f"⚠️  No date folders found for {city}")
+            return []
+
+        # Sort by date (most recent first)
+        date_folders.sort(reverse=True)
+        most_recent_folder = date_folders[0]
+
+        # Look for CSV file in that folder
+        csv_path = os.path.join(leads_dir, most_recent_folder, f'{most_recent_folder}_{city_lower}.csv')
+
+        if not os.path.exists(csv_path):
+            print(f"⚠️  CSV file not found: {csv_path}")
+            return []
+
+        # Read CSV file
+        with open(csv_path, 'r') as f:
+            reader = csv.DictReader(f)
+            all_leads = list(reader)
+
+        # Return requested count
+        for lead_data in all_leads[:count]:
+            leads.append({
+                'permit_number': lead_data.get('permit_number', 'N/A'),
+                'address': lead_data.get('address', 'N/A'),
+                'permit_type': lead_data.get('type', 'N/A'),
+                'permit_value': lead_data.get('value', 'N/A'),
+                'issue_date': lead_data.get('issued_date', datetime.now().strftime('%Y-%m-%d'))
+            })
+
+        print(f"✅ Loaded {len(leads)} real leads for {city} from {csv_path}")
+
+    except Exception as e:
+        print(f"❌ Error loading leads for {city}: {e}")
+        return []
+
     return leads
 
 def generate_csv_string(leads):
