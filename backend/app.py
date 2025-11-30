@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime
 import firebase_admin
-from firebase_admin import credentials, firestore
+from firebase_admin import credentials, firestore, auth
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Email, To, Content
 import pytz
@@ -118,6 +118,28 @@ def webhook():
                 'created_at': firestore.SERVER_TIMESTAMP
             })
             
+            # Create Firebase Auth user account
+            try:
+                user = auth.create_user(
+                    email=email,
+                    email_verified=False,
+                    display_name=email.split('@')[0]
+                )
+                
+                # Create user profile in Firestore
+                db.collection('users').document(user.uid).set({
+                    'email': email,
+                    'stripe_customer_id': customer_id,
+                    'subscription_active': True,
+                    'city': city,
+                    'created_at': firestore.SERVER_TIMESTAMP,
+                    'role': 'subscriber'
+                })
+                
+                print(f"✅ Created Firebase Auth user for subscriber: {email}")
+            except Exception as e:
+                print(f"⚠️  Could not create Firebase Auth user for {email}: {e}")
+            
             print(f"New subscriber: {email} for {city}")
         
         elif session.get('mode') == 'payment':
@@ -149,6 +171,30 @@ def webhook():
                     'amount_paid': amount_total,
                     'created_at': firestore.SERVER_TIMESTAMP
                 })
+                
+                # Create Firebase Auth user account
+                try:
+                    user = auth.create_user(
+                        email=customer_email,
+                        email_verified=False,
+                        display_name=customer_email.split('@')[0]
+                    )
+                    
+                    # Create user profile in Firestore
+                    db.collection('users').document(user.uid).set({
+                        'email': customer_email,
+                        'stripe_customer_id': customer_id,
+                        'subscription_active': True,
+                        'city': city,
+                        'cities': all_cities,
+                        'amount_paid': amount_total,
+                        'created_at': firestore.SERVER_TIMESTAMP,
+                        'role': 'subscriber'
+                    })
+                    
+                    print(f"✅ Created Firebase Auth user for All Cities Bundle subscriber: {customer_email}")
+                except Exception as e:
+                    print(f"⚠️  Could not create Firebase Auth user for {customer_email}: {e}")
 
                 # Create bundle folder
                 import os
@@ -201,6 +247,15 @@ Date: {lead['issue_date']}
                     <p>Thank you for subscribing to our All Cities Bundle! You now have access to fresh leads from all 7 cities.</p>
                     <p><strong>Your cities:</strong> {', '.join(all_cities)}</p>
                     <p>Below are sample leads from each city. You'll receive daily leads at 8 AM.</p>
+                    
+                    <div style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                        <h3 style="color: #0ea5e9; margin-top: 0;">🔐 Access Your Dashboard</h3>
+                        <p>You can now log into your dashboard to view all your leads and manage your account:</p>
+                        <p><strong>Dashboard URL:</strong> <a href="http://localhost:8080/dashboard/dashboard.html" style="color: #0ea5e9;">http://localhost:8080/dashboard/dashboard.html</a></p>
+                        <p><strong>Email:</strong> {customer_email}</p>
+                        <p><strong>Password:</strong> You'll need to create a password when you first log in.</p>
+                        <p style="color: #dc2626; font-weight: bold;">First-time login: Click "Create Account" on the login page to set your password.</p>
+                    </div>
                 """
 
                 for city_name in all_cities:
@@ -251,6 +306,29 @@ Date: {lead['issue_date']}
                     'amount_paid': amount_total,
                     'created_at': firestore.SERVER_TIMESTAMP
                 })
+                
+                # Create Firebase Auth user account
+                try:
+                    user = auth.create_user(
+                        email=customer_email,
+                        email_verified=False,
+                        display_name=customer_email.split('@')[0]
+                    )
+                    
+                    # Create user profile in Firestore
+                    db.collection('users').document(user.uid).set({
+                        'email': customer_email,
+                        'stripe_customer_id': customer_id,
+                        'subscription_active': True,
+                        'city': city,
+                        'amount_paid': amount_total,
+                        'created_at': firestore.SERVER_TIMESTAMP,
+                        'role': 'subscriber'
+                    })
+                    
+                    print(f"✅ Created Firebase Auth user for {city} subscriber: {customer_email}")
+                except Exception as e:
+                    print(f"⚠️  Could not create Firebase Auth user for {customer_email}: {e}")
 
                 # Add to local city folder (create if doesn't exist)
                 import os
@@ -300,6 +378,16 @@ Date: {lead['issue_date']}
                         <body style="font-family: Arial, sans-serif; padding: 20px;">
                             <h2 style="color: #667eea;">Welcome to Contractor Leads - {city}!</h2>
                             <p>Thank you for subscribing! Here are your first 5 sample leads. You'll receive fresh leads daily at 8 AM.</p>
+                            
+                            <div style="background: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                                <h3 style="color: #0ea5e9; margin-top: 0;">🔐 Access Your Dashboard</h3>
+                                <p>You can now log into your dashboard to view all your leads and manage your account:</p>
+                                <p><strong>Dashboard URL:</strong> <a href="http://localhost:8080/dashboard/dashboard.html" style="color: #0ea5e9;">http://localhost:8080/dashboard/dashboard.html</a></p>
+                                <p><strong>Email:</strong> {customer_email}</p>
+                                <p><strong>Password:</strong> You'll need to create a password when you first log in.</p>
+                                <p style="color: #dc2626; font-weight: bold;">First-time login: Click "Create Account" on the login page to set your password.</p>
+                            </div>
+                            
                             {html_table}
                             <hr style="margin: 30px 0;">
                             <p style="color: #718096; font-size: 14px;">
