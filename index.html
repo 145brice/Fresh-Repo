@@ -723,10 +723,9 @@
         <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center;">
             <div style="font-size: 24px; font-weight: 800;">🏗️ Contractor Leads</div>
             <nav style="display: flex; gap: 20px; align-items: center;">
-                <a href="/" style="color: white; text-decoration: none; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: background 0.3s;">Home</a>
+                <a href="/" style="color: white; text-decoration: none; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: background 0.3s; background: rgba(255,255,255,0.2);">Home</a>
                 <a href="dashboard/login.html" style="color: white; text-decoration: none; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: background 0.3s;">Login</a>
                 <a href="dashboard/signup.html" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: background 0.3s;">Sign Up</a>
-                <a href="https://billing.stripe.com/p/login/test_00g8xr8rp3lD5Vu000" target="_blank" style="color: white; text-decoration: none; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: background 0.3s;">Manage Subscription</a>
             </nav>
         </div>
     </header>
@@ -747,11 +746,11 @@
                             <div style="font-size: 36px; font-weight: 800; color: white; margin-bottom: 10px;">$47<span style="font-size: 18px; font-weight: 500;">/mo</span></div>
                             <div style="font-size: 14px; opacity: 0.8; color: white;">Any one city</div>
                         </div>
-                        <div style="text-align: center; flex: 1; max-width: 200px; position: relative;">
-                            <div style="background: #10b981; color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);">SAVE 80%</div>
-                            <div style="font-size: 16px; opacity: 0.9; margin-bottom: 15px; color: #10b981; font-weight: 600;">All 7 Cities</div>
-                            <div style="font-size: 42px; font-weight: 800; color: #10b981; margin-bottom: 10px;">$97<span style="font-size: 18px; font-weight: 500;">/mo</span></div>
-                            <div style="font-size: 14px; opacity: 0.8; color: white;">Best Value</div>
+                        <div style="text-align: center; flex: 1; max-width: 280px; position: relative; background: white; border-radius: 16px; padding: 30px 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 60px rgba(255,255,255,0.6); transform: scale(1.05);">
+                            <div style="background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);">SAVE 80%</div>
+                            <div style="font-size: 16px; margin-bottom: 15px; color: #667eea; font-weight: 700;">All 7 Cities Bundle</div>
+                            <div style="font-size: 56px; font-weight: 900; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 10px; line-height: 1;">$97<span style="font-size: 22px; font-weight: 600;">/mo</span></div>
+                            <div style="font-size: 14px; color: #10b981; font-weight: 700;">Save $232/month</div>
                         </div>
                     </div>
                 </div>
@@ -759,12 +758,6 @@
                     <a href="#cities" class="cta-primary" style="font-size: 24px; padding: 20px 60px; margin-bottom: 15px; display: inline-block;">Get Fresh Leads Now →</a>
                     <div style="font-size: 14px; opacity: 0.9; color: white;">⚡ 8 AM delivery • Cancel anytime • No contracts</div>
                 </div>
-            </div>
-            
-            <!-- Urgency Banner -->
-            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.2);">
-                <div style="font-size: 18px; font-weight: 700; margin-bottom: 5px;">🚨 Limited Time: 50% Off First Month</div>
-                <div style="font-size: 14px; opacity: 0.9;">Use code LAUNCH50 at checkout</div>
             </div>
             
             <p class="trust-badge">✓ 300+ contractors already getting leads • Powered by Stripe • Cancel with one click</p>
@@ -793,14 +786,6 @@
         </div>
     </div>
 
-    <!-- Urgency Countdown -->
-    <div style="background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%); color: white; padding: 20px; text-align: center;">
-        <div class="container">
-            <h3 style="margin: 0 0 10px 0; font-size: 24px;">⏰ Launch Special Ends Soon!</h3>
-            <div style="font-size: 18px; margin-bottom: 15px;">50% off first month for the next <span id="countdown" style="font-weight: 800; font-size: 22px;">24:00:00</span></div>
-            <div style="font-size: 14px; opacity: 0.9;">Don't miss out on fresh leads starting tomorrow morning</div>
-        </div>
-    </div>
 
     <!-- Micro-CTA Section -->
     <div class="micro-cta">
@@ -1172,52 +1157,10 @@
             });
         });
 
-        // Countdown Timer
-        function updateCountdown() {
-            const now = new Date();
-            const tomorrow = new Date(now);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            tomorrow.setHours(0, 0, 0, 0);
-            
-            const diff = tomorrow - now;
-            
-            if (diff > 0) {
-                const hours = Math.floor(diff / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                
-                document.getElementById('countdown').textContent = 
-                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            } else {
-                document.getElementById('countdown').textContent = 'EXPIRED';
-            }
-        }
-        
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
+        // Countdown timer removed
 
         // Exit Intent Popup
-        let exitIntentShown = false;
-        document.addEventListener('mouseleave', function(e) {
-            if (e.clientY < 0 && !exitIntentShown) {
-                exitIntentShown = true;
-                showExitPopup();
-            }
-        });
-
-        function showExitPopup() {
-            const popup = document.createElement('div');
-            popup.className = 'exit-popup';
-            popup.innerHTML = `
-                <div class="exit-popup-content">
-                    <div class="exit-popup-close" onclick="this.parentElement.parentElement.remove()">×</div>
-                    <h3>Wait! Don't Miss Out on Fresh Leads</h3>
-                    <p>Get your first month 50% off with code LAUNCH50. Leads start arriving tomorrow at 8 AM.</p>
-                    <a href="#cities" class="exit-popup-cta" onclick="this.parentElement.parentElement.remove()">Claim My Discount →</a>
-                </div>
-            `;
-            document.body.appendChild(popup);
-        }
+        // Exit intent popup removed
     </script>
 </body>
 </html>

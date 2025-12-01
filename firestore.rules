@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users can read and write their own user document
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Users can read subscriber data if it matches their customer ID
+    match /subscribers/{customerId} {
+      allow read: if request.auth != null &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.stripe_customer_id == customerId ||
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.email == resource.data.email);
+      allow write: if false; // Only backend can write subscriber data
+    }
+  }
+}

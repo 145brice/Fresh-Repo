@@ -685,15 +685,26 @@ scheduler.start()
 def health():
     return jsonify({'status': 'healthy', 'timestamp': datetime.now().isoformat()}), 200
 
-@app.route('/manual-send', methods=['POST'])
-def manual_send():
-    """Manual trigger for testing - remove in production"""
-    auth = request.headers.get('Authorization')
-    if auth != f"Bearer {os.getenv('ADMIN_SECRET', 'test123')}":
-        return jsonify({'error': 'Unauthorized'}), 401
+@app.route('/create-portal-session', methods=['POST'])
+def create_portal_session():
+    try:
+        data = request.get_json()
+        customer_id = data.get('customer_id')
+        
+        if not customer_id:
+            return jsonify({'error': 'Customer ID required'}), 400
+        
+        # Create customer portal session
+        session = stripe.billing_portal.Session.create(
+            customer=customer_id,
+            return_url='http://localhost:8081/index.html'  # Return to main page after portal
+        )
+        
+        return jsonify({'url': session.url})
     
-    send_daily_leads()
-    return jsonify({'status': 'sent'}), 200
+    except Exception as e:
+        print(f"Error creating portal session: {e}")
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))

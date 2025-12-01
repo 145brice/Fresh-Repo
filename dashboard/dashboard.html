@@ -205,19 +205,156 @@
             .header-content {
                 flex-direction: column;
                 gap: 15px;
+                text-align: center;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .user-menu {
+                justify-content: center;
             }
 
             .dashboard-grid {
                 grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .dashboard-card {
+                padding: 20px;
+            }
+
+            .card-title {
+                font-size: 18px;
+            }
+
+            .leads-section {
+                margin: 20px -10px;
+            }
+
+            .leads-header {
+                padding: 15px 20px;
+            }
+
+            .leads-header h2 {
+                font-size: 20px;
+            }
+
+            .leads-content {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                margin: 0 -10px;
+                padding: 0 10px;
             }
 
             .leads-table {
-                font-size: 14px;
+                font-size: 12px;
+                min-width: 600px; /* Prevent table from getting too narrow */
+                white-space: nowrap;
             }
 
             .leads-table th,
             .leads-table td {
-                padding: 10px 15px;
+                padding: 8px 10px;
+                min-width: 80px;
+            }
+
+            .leads-table th:nth-child(1), /* Permit # */
+            .leads-table td:nth-child(1) {
+                min-width: 100px;
+            }
+
+            .leads-table th:nth-child(2), /* Address */
+            .leads-table td:nth-child(2) {
+                min-width: 150px;
+                white-space: normal;
+                word-wrap: break-word;
+            }
+
+            .leads-table th:nth-child(3), /* City */
+            .leads-table td:nth-child(3) {
+                min-width: 90px;
+            }
+
+            .leads-table th:nth-child(4), /* Type */
+            .leads-table td:nth-child(4) {
+                min-width: 100px;
+            }
+
+            .leads-table th:nth-child(5), /* Value */
+            .leads-table td:nth-child(5) {
+                min-width: 80px;
+                text-align: right;
+            }
+
+            .leads-table th:nth-child(6), /* Date */
+            .leads-table td:nth-child(6) {
+                min-width: 80px;
+            }
+
+            .welcome-section {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+
+            .welcome-section h1 {
+                font-size: 24px;
+                margin-bottom: 8px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .logout-btn {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+
+            nav a {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 15px;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .leads-table {
+                font-size: 11px;
+                min-width: 550px;
+            }
+
+            .leads-table th,
+            .leads-table td {
+                padding: 6px 8px;
+            }
+
+            .leads-header {
+                padding: 12px 15px;
+            }
+
+            .leads-header h2 {
+                font-size: 18px;
+            }
+
+            .welcome-section h1 {
+                font-size: 20px;
+            }
+
+            .card-title {
+                font-size: 16px;
+            }
+
+            .dashboard-card {
+                padding: 15px;
             }
         }
     </style>
@@ -226,10 +363,12 @@
     <header class="header">
         <div class="header-content">
             <div class="logo">🏗️ Contractor Leads</div>
-            <div class="user-menu">
+            <nav style="display: flex; gap: 20px; align-items: center;">
+                <a href="../index.html" style="color: white; text-decoration: none; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: background 0.3s;">Home</a>
+                <a href="dashboard.html" style="color: white; text-decoration: none; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: background 0.3s; background: rgba(255,255,255,0.2);">Dashboard</a>
                 <span id="user-email">Loading...</span>
                 <button class="logout-btn" id="logout-btn">Logout</button>
-            </div>
+            </nav>
         </div>
     </header>
 
@@ -380,11 +519,29 @@
                         <div style="margin-bottom: 15px;">
                             <strong>Amount Paid:</strong> ${formatCurrency(subscriberData.amount_paid || 0)}
                         </div>
+                        <div style="margin-bottom: 15px;">
+                            <button id="manage-subscription-btn" class="manage-btn" style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 500;">Manage Subscription</button>
+                        </div>
                     `;
 
                     // Update subscription status badge
                     subscriptionStatus.textContent = subscriberData.active ? 'Active' : 'Inactive';
                     subscriptionStatus.className = `subscription-status ${subscriberData.active ? 'status-active' : 'status-inactive'}`;
+                    
+                    // Add manage subscription link to navigation if active
+                    if (subscriberData.active) {
+                        const nav = document.querySelector('nav');
+                        const manageLink = document.createElement('a');
+                        manageLink.href = '#';
+                        manageLink.id = 'nav-manage-subscription';
+                        manageLink.style.cssText = 'color: white; text-decoration: none; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: background 0.3s;';
+                        manageLink.textContent = 'Manage Subscription';
+                        manageLink.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            document.getElementById('manage-subscription-btn').click();
+                        });
+                        nav.insertBefore(manageLink, nav.lastElementChild);
+                    }
                 } else {
                     accountHtml += `
                         <div style="margin-bottom: 15px; color: #dc2626;">
@@ -407,81 +564,223 @@
         // Load user leads
         async function loadLeads(user) {
             try {
-                // Load real Nashville leads from the latest CSV data
-                const nashvilleLeads = [
-                    {
-                        permit_number: 'NSH251110000',
-                        address: '7989 Church St, Nashville, TN',
-                        permit_type: 'NEW CONSTRUCTION',
-                        permit_value: 255402,
-                        issue_date: '2025-09-22'
-                    },
-                    {
-                        permit_number: 'NSH251110001',
-                        address: '3701 Woodland St, Nashville, TN',
-                        permit_type: 'NEW CONSTRUCTION',
-                        permit_value: 416844,
-                        issue_date: '2025-09-26'
-                    },
-                    {
-                        permit_number: 'NSH251110002',
-                        address: '4979 West End Ave, Nashville, TN',
-                        permit_type: 'REMODEL',
-                        permit_value: 394838,
-                        issue_date: '2025-10-28'
-                    },
-                    {
-                        permit_number: 'NSH251110003',
-                        address: '8620 Woodland St, Nashville, TN',
-                        permit_type: 'NEW CONSTRUCTION',
-                        permit_value: 214975,
-                        issue_date: '2025-11-18'
-                    },
-                    {
-                        permit_number: 'NSH251110004',
-                        address: '5735 West End Ave, Nashville, TN',
-                        permit_type: 'NEW CONSTRUCTION',
-                        permit_value: 112857,
-                        issue_date: '2025-10-04'
-                    },
-                    {
-                        permit_number: 'NSH251110005',
-                        address: '3135 Broadway, Nashville, TN',
-                        permit_type: 'ADDITION',
-                        permit_value: 453161,
-                        issue_date: '2025-10-08'
-                    },
-                    {
-                        permit_number: 'NSH251110006',
-                        address: '2846 Charlotte Ave, Nashville, TN',
-                        permit_type: 'ADDITION',
-                        permit_value: 473148,
-                        issue_date: '2025-11-06'
-                    },
-                    {
-                        permit_number: 'NSH251110007',
-                        address: '2841 Woodland St, Nashville, TN',
-                        permit_type: 'NEW CONSTRUCTION',
-                        permit_value: 341105,
-                        issue_date: '2025-09-01'
-                    },
-                    {
-                        permit_number: 'NSH251110008',
-                        address: '2945 Church St, Nashville, TN',
-                        permit_type: 'NEW CONSTRUCTION',
-                        permit_value: 414848,
-                        issue_date: '2025-10-18'
-                    },
-                    {
-                        permit_number: 'NSH251110009',
-                        address: '4047 Woodland St, Nashville, TN',
-                        permit_type: 'ADDITION',
-                        permit_value: 124257,
-                        issue_date: '2025-11-11'
+                // First get user's subscription data to determine which cities they have access to
+                const subscriberDoc = await getDoc(doc(db, 'subscribers', user.uid));
+                let userCities = ['Nashville']; // Default fallback
+                
+                if (subscriberDoc.exists()) {
+                    const subscriberData = subscriberDoc.data();
+                    const city = subscriberData.city;
+                    
+                    if (city === 'all-cities') {
+                        // All Cities Bundle subscriber - show all cities
+                        userCities = ['Nashville', 'Chattanooga', 'Austin', 'San Antonio', 'Houston', 'Charlotte', 'Phoenix'];
+                    } else {
+                        // Single city subscriber
+                        userCities = [city];
                     }
-                ];
+                }
 
-                if (nashvilleLeads.length === 0) {
+                // Load leads from all user's cities
+                let allLeads = [];
+                
+                // Nashville leads (always available as sample data)
+                if (userCities.includes('Nashville')) {
+                    const nashvilleLeads = [
+                        {
+                            permit_number: 'NSH251110000',
+                            address: '7989 Church St, Nashville, TN',
+                            permit_type: 'NEW CONSTRUCTION',
+                            permit_value: 255402,
+                            issue_date: '2025-09-22',
+                            city: 'Nashville'
+                        },
+                        {
+                            permit_number: 'NSH251110001',
+                            address: '3701 Woodland St, Nashville, TN',
+                            permit_type: 'NEW CONSTRUCTION',
+                            permit_value: 416844,
+                            issue_date: '2025-09-26',
+                            city: 'Nashville'
+                        },
+                        {
+                            permit_number: 'NSH251110002',
+                            address: '4979 West End Ave, Nashville, TN',
+                            permit_type: 'REMODEL',
+                            permit_value: 394838,
+                            issue_date: '2025-10-28',
+                            city: 'Nashville'
+                        },
+                        {
+                            permit_number: 'NSH251110003',
+                            address: '8620 Woodland St, Nashville, TN',
+                            permit_type: 'NEW CONSTRUCTION',
+                            permit_value: 214975,
+                            issue_date: '2025-11-18',
+                            city: 'Nashville'
+                        },
+                        {
+                            permit_number: 'NSH251110004',
+                            address: '5735 West End Ave, Nashville, TN',
+                            permit_type: 'NEW CONSTRUCTION',
+                            permit_value: 112857,
+                            issue_date: '2025-10-04',
+                            city: 'Nashville'
+                        },
+                        {
+                            permit_number: 'NSH251110005',
+                            address: '3135 Broadway, Nashville, TN',
+                            permit_type: 'ADDITION',
+                            permit_value: 453161,
+                            issue_date: '2025-10-08',
+                            city: 'Nashville'
+                        },
+                        {
+                            permit_number: 'NSH251110006',
+                            address: '2846 Charlotte Ave, Nashville, TN',
+                            permit_type: 'ADDITION',
+                            permit_value: 473148,
+                            issue_date: '2025-11-06',
+                            city: 'Nashville'
+                        },
+                        {
+                            permit_number: 'NSH251110007',
+                            address: '2841 Woodland St, Nashville, TN',
+                            permit_type: 'NEW CONSTRUCTION',
+                            permit_value: 341105,
+                            issue_date: '2025-09-01',
+                            city: 'Nashville'
+                        },
+                        {
+                            permit_number: 'NSH251110008',
+                            address: '2945 Church St, Nashville, TN',
+                            permit_type: 'NEW CONSTRUCTION',
+                            permit_value: 414848,
+                            issue_date: '2025-10-18',
+                            city: 'Nashville'
+                        },
+                        {
+                            permit_number: 'NSH251110009',
+                            address: '4047 Woodland St, Nashville, TN',
+                            permit_type: 'ADDITION',
+                            permit_value: 124257,
+                            issue_date: '2025-11-11',
+                            city: 'Nashville'
+                        }
+                    ];
+                    allLeads.push(...nashvilleLeads);
+                }
+
+                // Chattanooga leads (sample data)
+                if (userCities.includes('Chattanooga')) {
+                    const chattanoogaLeads = [
+                        {
+                            permit_number: 'CHT251110000',
+                            address: '1234 Main St, Chattanooga, TN',
+                            permit_type: 'NEW CONSTRUCTION',
+                            permit_value: 285000,
+                            issue_date: '2025-11-15',
+                            city: 'Chattanooga'
+                        },
+                        {
+                            permit_number: 'CHT251110001',
+                            address: '5678 Oak Ave, Chattanooga, TN',
+                            permit_type: 'REMODEL',
+                            permit_value: 156000,
+                            issue_date: '2025-11-20',
+                            city: 'Chattanooga'
+                        }
+                    ];
+                    allLeads.push(...chattanoogaLeads);
+                }
+
+                // Austin leads (sample data)
+                if (userCities.includes('Austin')) {
+                    const austinLeads = [
+                        {
+                            permit_number: 'AUS251110000',
+                            address: '9101 Congress Ave, Austin, TX',
+                            permit_type: 'NEW CONSTRUCTION',
+                            permit_value: 425000,
+                            issue_date: '2025-11-10',
+                            city: 'Austin'
+                        },
+                        {
+                            permit_number: 'AUS251110001',
+                            address: '2345 6th St, Austin, TX',
+                            permit_type: 'ADDITION',
+                            permit_value: 198000,
+                            issue_date: '2025-11-18',
+                            city: 'Austin'
+                        }
+                    ];
+                    allLeads.push(...austinLeads);
+                }
+
+                // San Antonio leads (sample data)
+                if (userCities.includes('San Antonio')) {
+                    const sanAntonioLeads = [
+                        {
+                            permit_number: 'SAT251110000',
+                            address: '3456 Alamo St, San Antonio, TX',
+                            permit_type: 'NEW CONSTRUCTION',
+                            permit_value: 312000,
+                            issue_date: '2025-11-12',
+                            city: 'San Antonio'
+                        }
+                    ];
+                    allLeads.push(...sanAntonioLeads);
+                }
+
+                // Houston leads (sample data)
+                if (userCities.includes('Houston')) {
+                    const houstonLeads = [
+                        {
+                            permit_number: 'HOU251110000',
+                            address: '7890 Texas St, Houston, TX',
+                            permit_type: 'REMODEL',
+                            permit_value: 267000,
+                            issue_date: '2025-11-08',
+                            city: 'Houston'
+                        }
+                    ];
+                    allLeads.push(...houstonLeads);
+                }
+
+                // Charlotte leads (sample data)
+                if (userCities.includes('Charlotte')) {
+                    const charlotteLeads = [
+                        {
+                            permit_number: 'CLT251110000',
+                            address: '1111 Trade St, Charlotte, NC',
+                            permit_type: 'ADDITION',
+                            permit_value: 189000,
+                            issue_date: '2025-11-14',
+                            city: 'Charlotte'
+                        }
+                    ];
+                    allLeads.push(...charlotteLeads);
+                }
+
+                // Phoenix leads (sample data)
+                if (userCities.includes('Phoenix')) {
+                    const phoenixLeads = [
+                        {
+                            permit_number: 'PHX251110000',
+                            address: '2222 Camelback Rd, Phoenix, AZ',
+                            permit_type: 'NEW CONSTRUCTION',
+                            permit_value: 378000,
+                            issue_date: '2025-11-16',
+                            city: 'Phoenix'
+                        }
+                    ];
+                    allLeads.push(...phoenixLeads);
+                }
+
+                // Sort leads by issue date (newest first)
+                allLeads.sort((a, b) => new Date(b.issue_date) - new Date(a.issue_date));
+
+                if (allLeads.length === 0) {
                     leadsContent.innerHTML = `
                         <div class="no-leads">
                             <h3>No leads yet</h3>
@@ -495,6 +794,7 @@
                                 <tr>
                                     <th>Permit #</th>
                                     <th>Address</th>
+                                    <th>City</th>
                                     <th>Type</th>
                                     <th>Value</th>
                                     <th>Issue Date</th>
@@ -503,11 +803,12 @@
                             <tbody>
                     `;
 
-                    nashvilleLeads.forEach(lead => {
+                    allLeads.forEach(lead => {
                         leadsHtml += `
                             <tr>
                                 <td><span class="lead-address">${lead.permit_number}</span></td>
                                 <td>${lead.address}</td>
+                                <td>${lead.city}</td>
                                 <td>${lead.permit_type}</td>
                                 <td><span class="lead-value">${formatCurrency(lead.permit_value)}</span></td>
                                 <td>${formatDate(lead.issue_date)}</td>
@@ -520,7 +821,8 @@
                         </table>
                         <div style="margin-top: 20px; padding: 15px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #3b82f6;">
                             <p style="margin: 0; color: #1e40af; font-size: 14px;">
-                                <strong>📧 Email Delivery:</strong> These exact leads are sent to Nashville subscribers every morning at 8 AM.
+                                <strong>📧 Email Delivery:</strong> These leads are sent to your email every morning at 8 AM.
+                                ${userCities.length > 1 ? `You have access to ${userCities.length} cities: ${userCities.join(', ')}.` : `You have access to ${userCities[0]} leads.`}
                             </p>
                         </div>
                     `;
@@ -533,9 +835,7 @@
                 leadsContent.innerHTML = '<div style="color: #dc2626; padding: 20px;">Error loading leads</div>';
                 showError('Failed to load leads');
             }
-        }
-
-        // Handle logout
+        }        // Handle logout
         logoutBtn.addEventListener('click', async () => {
             try {
                 await signOut(auth);
@@ -543,6 +843,58 @@
             } catch (error) {
                 console.error('Logout error:', error);
                 showError('Failed to logout');
+            }
+        });
+
+        // Handle manage subscription
+        document.addEventListener('click', async (e) => {
+            if (e.target.id === 'manage-subscription-btn') {
+                try {
+                    const user = auth.currentUser;
+                    if (!user) {
+                        showError('Please log in to manage your subscription');
+                        return;
+                    }
+
+                    // Get customer ID from subscriber data
+                    const subscriberDoc = await getDoc(doc(db, 'subscribers', user.uid));
+                    if (!subscriberDoc.exists()) {
+                        showError('No subscription found');
+                        return;
+                    }
+
+                    const subscriberData = subscriberDoc.data();
+                    const customerId = subscriberData.stripe_customer_id;
+
+                    if (!customerId) {
+                        showError('Customer ID not found');
+                        return;
+                    }
+
+                    // Call backend to create portal session
+                    const response = await fetch('http://localhost:8083/create-portal-session', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ customer_id: customerId })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to create portal session');
+                    }
+
+                    const data = await response.json();
+                    if (data.url) {
+                        window.open(data.url, '_blank');
+                    } else {
+                        throw new Error('No portal URL returned');
+                    }
+
+                } catch (error) {
+                    console.error('Error managing subscription:', error);
+                    showError('Failed to open subscription management. Please try again.');
+                }
             }
         });
 
