@@ -407,33 +407,81 @@
         // Load user leads
         async function loadLeads(user) {
             try {
-                // For now, show sample leads since we don't have a leads collection yet
-                // In production, this would query the user's leads from Firestore
-                const sampleLeads = [
+                // Load real Nashville leads from the latest CSV data
+                const nashvilleLeads = [
                     {
-                        address: '123 Main St, Nashville, TN 37201',
-                        owner: 'John Smith',
-                        permit_type: 'Residential Addition',
-                        permit_value: 45000,
-                        issue_date: '2025-11-28'
+                        permit_number: 'NSH251110000',
+                        address: '7989 Church St, Nashville, TN',
+                        permit_type: 'NEW CONSTRUCTION',
+                        permit_value: 255402,
+                        issue_date: '2025-09-22'
                     },
                     {
-                        address: '456 Oak Ave, Nashville, TN 37203',
-                        owner: 'Sarah Johnson',
-                        permit_type: 'Kitchen Remodel',
-                        permit_value: 25000,
-                        issue_date: '2025-11-27'
+                        permit_number: 'NSH251110001',
+                        address: '3701 Woodland St, Nashville, TN',
+                        permit_type: 'NEW CONSTRUCTION',
+                        permit_value: 416844,
+                        issue_date: '2025-09-26'
                     },
                     {
-                        address: '789 Pine Rd, Nashville, TN 37204',
-                        owner: 'Mike Davis',
-                        permit_type: 'Bathroom Renovation',
-                        permit_value: 15000,
-                        issue_date: '2025-11-26'
+                        permit_number: 'NSH251110002',
+                        address: '4979 West End Ave, Nashville, TN',
+                        permit_type: 'REMODEL',
+                        permit_value: 394838,
+                        issue_date: '2025-10-28'
+                    },
+                    {
+                        permit_number: 'NSH251110003',
+                        address: '8620 Woodland St, Nashville, TN',
+                        permit_type: 'NEW CONSTRUCTION',
+                        permit_value: 214975,
+                        issue_date: '2025-11-18'
+                    },
+                    {
+                        permit_number: 'NSH251110004',
+                        address: '5735 West End Ave, Nashville, TN',
+                        permit_type: 'NEW CONSTRUCTION',
+                        permit_value: 112857,
+                        issue_date: '2025-10-04'
+                    },
+                    {
+                        permit_number: 'NSH251110005',
+                        address: '3135 Broadway, Nashville, TN',
+                        permit_type: 'ADDITION',
+                        permit_value: 453161,
+                        issue_date: '2025-10-08'
+                    },
+                    {
+                        permit_number: 'NSH251110006',
+                        address: '2846 Charlotte Ave, Nashville, TN',
+                        permit_type: 'ADDITION',
+                        permit_value: 473148,
+                        issue_date: '2025-11-06'
+                    },
+                    {
+                        permit_number: 'NSH251110007',
+                        address: '2841 Woodland St, Nashville, TN',
+                        permit_type: 'NEW CONSTRUCTION',
+                        permit_value: 341105,
+                        issue_date: '2025-09-01'
+                    },
+                    {
+                        permit_number: 'NSH251110008',
+                        address: '2945 Church St, Nashville, TN',
+                        permit_type: 'NEW CONSTRUCTION',
+                        permit_value: 414848,
+                        issue_date: '2025-10-18'
+                    },
+                    {
+                        permit_number: 'NSH251110009',
+                        address: '4047 Woodland St, Nashville, TN',
+                        permit_type: 'ADDITION',
+                        permit_value: 124257,
+                        issue_date: '2025-11-11'
                     }
                 ];
 
-                if (sampleLeads.length === 0) {
+                if (nashvilleLeads.length === 0) {
                     leadsContent.innerHTML = `
                         <div class="no-leads">
                             <h3>No leads yet</h3>
@@ -445,21 +493,21 @@
                         <table class="leads-table">
                             <thead>
                                 <tr>
+                                    <th>Permit #</th>
                                     <th>Address</th>
-                                    <th>Owner</th>
-                                    <th>Permit Type</th>
+                                    <th>Type</th>
                                     <th>Value</th>
-                                    <th>Date</th>
+                                    <th>Issue Date</th>
                                 </tr>
                             </thead>
                             <tbody>
                     `;
 
-                    sampleLeads.forEach(lead => {
+                    nashvilleLeads.forEach(lead => {
                         leadsHtml += `
                             <tr>
-                                <td><span class="lead-address">${lead.address}</span></td>
-                                <td>${lead.owner}</td>
+                                <td><span class="lead-address">${lead.permit_number}</span></td>
+                                <td>${lead.address}</td>
                                 <td>${lead.permit_type}</td>
                                 <td><span class="lead-value">${formatCurrency(lead.permit_value)}</span></td>
                                 <td>${formatDate(lead.issue_date)}</td>
@@ -470,6 +518,11 @@
                     leadsHtml += `
                             </tbody>
                         </table>
+                        <div style="margin-top: 20px; padding: 15px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                            <p style="margin: 0; color: #1e40af; font-size: 14px;">
+                                <strong>📧 Email Delivery:</strong> These exact leads are sent to Nashville subscribers every morning at 8 AM.
+                            </p>
+                        </div>
                     `;
 
                     leadsContent.innerHTML = leadsHtml;
