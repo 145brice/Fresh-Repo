@@ -8,8 +8,19 @@ from .utils import retry_with_backoff, setup_logger, ScraperHealthCheck, save_pa
 class NashvillePermitScraper:
     def __init__(self):
         # Nashville MapServer endpoint for building permits
-        # API: https://maps.nashville.gov/arcgis/rest/services/Codes/BuildingPermits/MapServer/0
-        self.mapserver_url = 'https://maps.nashville.gov/arcgis/rest/services/Codes/BuildingPermits/MapServer/0/query'
+        # Multiple endpoints for auto-recovery
+        self.endpoints = [
+            {
+                'name': 'Nashville MapServer',
+                'url': 'https://maps.nashville.gov/arcgis/rest/services/Codes/BuildingPermits/MapServer/0/query',
+                'type': 'arcgis_mapserver'
+            },
+            {
+                'name': 'Nashville FeatureServer (backup)',
+                'url': 'https://services.arcgis.com/pFvcCRJCPbPK4Sy7/arcgis/rest/services/Building_Permits/FeatureServer/0/query',
+                'type': 'arcgis_featureserver'
+            }
+        ]
         self.permits = []
         self.seen_permit_ids = set()
         self.logger = setup_logger('nashville')
@@ -50,90 +61,109 @@ class NashvillePermitScraper:
         return response.json()
 
     def scrape_permits(self, max_permits=5000, days_back=90):
-        """Scrape Nashville permits using MapServer API"""
+        """Scrape Nashville permits with auto-recovery across multiple endpoints"""
         self.logger.info("🏗️  Nashville TN Construction Permits Scraper")
         print(f"🏗️  Nashville TN Construction Permits Scraper")
         print(f"=" * 60)
-        print(f"📡 Using Nashville MapServer API...")
+        print(f"📡 Trying multiple Nashville endpoints with auto-recovery...")
 
-        try:
-            offset = 0
-            batch_size = 1000
-            consecutive_failures = 0
-            max_consecutive_failures = 3
+        # Try each endpoint in sequence until one works
+        for endpoint_config in self.endpoints:
+            endpoint_url = endpoint_config['url']
+            endpoint_name = endpoint_config['name']
 
-            while len(self.permits) < max_permits:
-                try:
-                    params = {
-                        'where': '1=1',  # Get all active construction permits
-                        'outFields': 'CASE_NUMBER,LOCATION,CASE_TYPE_DESC,CONSTVAL,DATE_ISSUED,STATUS_CODE',
-                        'returnGeometry': 'false',
-                        'resultRecordCount': min(batch_size, max_permits - len(self.permits)),
-                        'resultOffset': offset,
-                        'orderByFields': 'DATE_ISSUED DESC',
-                        'f': 'json'
-                    }
+            self.logger.info(f"Trying {endpoint_name}")
+            print(f"\n🔍 Trying: {endpoint_name}...")
 
-                    response = requests.get(self.mapserver_url, params=params, timeout=30)
-                    response.raise_for_status()
-                    data = response.json()
+            try:
+                self.permits = []  # Reset for each endpoint
+                self.seen_permit_ids = set()
+                offset = 0
+                batch_size = 1000
+                consecutive_failures = 0
+                max_consecutive_failures = 3
 
-                    if not data.get('features'):
-                        self.logger.info(f"No more data at offset {offset}")
-                        break
+                while len(self.permits) < max_permits:
+                    try:
+                        params = {
+                            'where': '1=1',  # Get all active construction permits
+                            'outFields': 'CASE_NUMBER,LOCATION,CASE_TYPE_DESC,CONSTVAL,DATE_ISSUED,STATUS_CODE',
+                            'returnGeometry': 'false',
+                            'resultRecordCount': min(batch_size, max_permits - len(self.permits)),
+                            'resultOffset': offset,
+                            'orderByFields': 'DATE_ISSUED DESC',
+                            'f': 'json'
+                        }
 
-                    # Reset failure counter on success
-                    consecutive_failures = 0
+                        response = requests.get(endpoint_url, params=params, timeout=30)
+                        response.raise_for_status()
+                        data = response.json()
 
-                    for feature in data['features']:
-                        attrs = feature.get('attributes', {})
-                        permit_id = str(attrs.get('CASE_NUMBER', ''))
+                        # Check for ArcGIS error
+                        if 'error' in data:
+                            self.logger.warning(f"{endpoint_name} returned error: {data['error']}")
+                            print(f"   ❌ {endpoint_name} error: {data['error'].get('message', 'Unknown')}")
+                            break
 
-                        if permit_id and permit_id not in self.seen_permit_ids:
-                            self.seen_permit_ids.add(permit_id)
-                            self.permits.append({
-                                'permit_number': permit_id,
-                                'address': attrs.get('LOCATION') or 'N/A',
-                                'type': attrs.get('CASE_TYPE_DESC') or 'N/A',
-                                'value': self._parse_cost(attrs.get('CONSTVAL') or 0),
-                                'issued_date': self._format_arcgis_date(attrs.get('DATE_ISSUED')),
-                                'status': attrs.get('STATUS_CODE') or 'N/A'
-                            })
+                        if not data.get('features'):
+                            self.logger.info(f"No more data at offset {offset}")
+                            break
 
-                    print(f"✓ Fetched {len(self.permits)} permits so far...")
+                        # Reset failure counter on success
+                        consecutive_failures = 0
 
-                    if len(data['features']) < batch_size:
-                        break
-                    offset += batch_size
-                    time.sleep(0.5)
+                        for feature in data['features']:
+                            attrs = feature.get('attributes', {})
+                            permit_id = str(attrs.get('CASE_NUMBER', ''))
 
-                except requests.RequestException as e:
-                    consecutive_failures += 1
-                    self.logger.warning(f"Batch error at offset {offset}: {e}")
+                            if permit_id and permit_id not in self.seen_permit_ids:
+                                self.seen_permit_ids.add(permit_id)
+                                self.permits.append({
+                                    'permit_number': permit_id,
+                                    'address': attrs.get('LOCATION') or 'N/A',
+                                    'type': attrs.get('CASE_TYPE_DESC') or 'N/A',
+                                    'value': self._parse_cost(attrs.get('CONSTVAL') or 0),
+                                    'issued_date': self._format_arcgis_date(attrs.get('DATE_ISSUED')),
+                                    'status': attrs.get('STATUS_CODE') or 'N/A'
+                                })
 
-                    if consecutive_failures >= max_consecutive_failures:
-                        self.logger.error(f"Too many consecutive failures, stopping")
-                        break
+                        print(f"✓ Fetched {len(self.permits)} permits so far...")
 
-                    offset += batch_size
-                    time.sleep(2)
+                        if len(data['features']) < batch_size:
+                            break
+                        offset += batch_size
+                        time.sleep(0.5)
 
-            if len(self.permits) > 0:
-                self.logger.info(f"✅ Success! Got {len(self.permits)} permits from MapServer")
-                self.health_check.record_success(len(self.permits))
-                print(f"\n✅ Success! Got {len(self.permits)} Nashville permits")
-                return self.permits
-            else:
-                self.logger.warning("No permits found")
-                self.health_check.record_failure("No permits found")
-                print(f"⚠️  No permits found - will retry next run")
-                return []
+                    except requests.RequestException as e:
+                        consecutive_failures += 1
+                        self.logger.warning(f"Batch error at offset {offset}: {e}")
 
-        except Exception as e:
-            self.logger.error(f"Nashville MapServer endpoint failed: {e}")
-            self.health_check.record_failure(str(e))
-            print(f"❌ Nashville MapServer endpoint failed: {e}")
-            return []
+                        if consecutive_failures >= max_consecutive_failures:
+                            self.logger.error(f"Too many consecutive failures on {endpoint_name}")
+                            print(f"   ❌ Too many failures on {endpoint_name}")
+                            break
+
+                        offset += batch_size
+                        time.sleep(2)
+
+                # If we got permits from this endpoint, we're done!
+                if len(self.permits) > 0:
+                    self.logger.info(f"✅ Success! Got {len(self.permits)} permits from {endpoint_name}")
+                    self.health_check.record_success(len(self.permits))
+                    print(f"\n✅ Success! Got {len(self.permits)} Nashville permits from {endpoint_name}")
+                    return self.permits
+
+            except Exception as e:
+                self.logger.warning(f"{endpoint_name} failed: {e}")
+                print(f"   ❌ {endpoint_name} failed: {str(e)[:60]}...")
+                # Continue to next endpoint
+                continue
+
+        # If we get here, all endpoints failed
+        self.logger.error("All Nashville endpoints failed")
+        self.health_check.record_failure("All endpoints failed")
+        print(f"\n❌ All Nashville endpoints failed - will retry next run")
+        return []
     
     def _parse_cost(self, value):
         try:
