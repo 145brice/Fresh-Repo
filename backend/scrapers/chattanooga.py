@@ -7,8 +7,8 @@ from .utils import retry_with_backoff, setup_logger, ScraperHealthCheck, save_pa
 
 class ChattanoogaPermitScraper:
     def __init__(self):
-        # Chattanooga Open Data Portal (Socrata)
-        self.base_url = "https://data.chattlibrary.org/resource/feqp-isti.json"
+        # Chattanooga Open Data Portal (updated endpoint)
+        self.base_url = "https://www.chattadata.org/resource/764y-vxm2.json"
         self.permits = []
         self.seen_permit_ids = set()
         self.logger = setup_logger('chattanooga')
@@ -39,9 +39,9 @@ class ChattanoogaPermitScraper:
         end_date = datetime.now()
         start_date = end_date - timedelta(days=days_back)
 
-        # Format dates for Socrata API
-        start_date_str = start_date.strftime('%Y-%m-%dT00:00:00.000')
-        end_date_str = end_date.strftime('%Y-%m-%dT23:59:59.999')
+        # Format dates for filtering
+        start_date_str = start_date.strftime('%Y-%m-%d')
+        end_date_str = end_date.strftime('%Y-%m-%d')
 
         self.logger.info(f"Date Range: {start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}")
         print(f"Date Range: {start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}")
@@ -55,9 +55,8 @@ class ChattanoogaPermitScraper:
 
         while total_fetched < max_permits:
             try:
+                # Use simple limit/offset for Chattanooga API
                 params = {
-                    '$where': f"issued_date >= '{start_date_str}' AND issued_date <= '{end_date_str}'",
-                    '$order': 'issued_date DESC',
                     '$limit': min(batch_size, max_permits - total_fetched),
                     '$offset': offset
                 }
@@ -72,20 +71,28 @@ class ChattanoogaPermitScraper:
                 consecutive_failures = 0
 
                 for record in data:
-                    permit_id = record.get('permit_number') or record.get('permit_id') or str(record.get('id', ''))
-                    if permit_id not in self.seen_permit_ids:
-                        self.seen_permit_ids.add(permit_id)
-                        self.permits.append({
-                            'permit_number': permit_id,
-                            'address': record.get('address') or 'N/A',
-                            'type': record.get('permit_type') or 'N/A',
-                            'value': self._parse_cost(record.get('cost') or 0),
-                            'issued_date': self._format_date(record.get('issued_date')),
-                            'status': record.get('status') or 'N/A'
-                        })
+                    # Filter by issued date in Python
+                    issued_date_str = record.get('issueddate', '')
+                    if issued_date_str:
+                        try:
+                            issued_date = datetime.fromisoformat(issued_date_str.replace('Z', '+00:00'))
+                            if start_date <= issued_date <= end_date:
+                                permit_id = record.get('permitnum') or str(record.get('id', ''))
+                                if permit_id not in self.seen_permit_ids:
+                                    self.seen_permit_ids.add(permit_id)
+                                    self.permits.append({
+                                        'permit_number': permit_id,
+                                        'address': f"{record.get('originaladdress1', '')} {record.get('originalcity', '')} {record.get('originalstate', '')} {record.get('originalzip', '')}".strip(),
+                                        'type': record.get('permittype') or record.get('permitclass') or 'N/A',
+                                        'value': self._parse_cost(record.get('estprojectcost') or 0),
+                                        'issued_date': self._format_date(record.get('issueddate')),
+                                        'status': record.get('statuscurrent') or 'N/A'
+                                    })
+                        except:
+                            continue  # Skip records with invalid dates
 
                 total_fetched += len(data)
-                self.logger.debug(f"Fetched batch at offset {offset}: {len(data)} records")
+                self.logger.debug(f"Fetched batch at offset {offset}: {len(data)} records, filtered to {len(self.permits)}")
 
                 if len(data) < batch_size:
                     break

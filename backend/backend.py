@@ -42,7 +42,7 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 # Cities list - add new ones here
-CITIES = ['nashville', 'chattanooga', 'austin', 'sanantonio', 'houston', 'charlotte', 'phoenix']  # expand forever
+CITIES = ['nashville', 'chattanooga', 'austin', 'sanantonio', 'houston', 'charlotte', 'phoenix', 'dallas', 'raleigh']  # expand forever
 
 # Create folders
 os.makedirs('../Clients Subs/cities', exist_ok=True)
@@ -865,10 +865,14 @@ def run_scraper(city):
             from scrapers import charlotte
             permits = charlotte.scrape_permits()
             charlotte.save_to_csv(permits)
-        elif city == 'phoenix':
-            from scrapers import phoenix
-            permits = phoenix.scrape_permits()
-            phoenix.save_to_csv(permits)
+        elif city == 'dallas':
+            from scrapers import dallas
+            permits = dallas.scrape_permits()
+            dallas.save_to_csv(permits)
+        elif city == 'raleigh':
+            from scrapers import raleigh
+            permits = raleigh.scrape_permits()
+            raleigh.save_to_csv(permits)
         else:
             print(f'No scraper for {city}')
             return

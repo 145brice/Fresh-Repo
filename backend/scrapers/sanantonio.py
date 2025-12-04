@@ -8,10 +8,10 @@ from .utils import retry_with_backoff, setup_logger, ScraperHealthCheck, save_pa
 
 class SanAntonioPermitScraper:
     def __init__(self):
-        # San Antonio uses CSV downloads, not API!
+        # San Antonio uses CSV downloads - updated URLs
         self.csv_urls = [
-            'https://data.sanantonio.gov/dataset/7d6a2a15-e55c-49d7-b5e2-b4ec3495048c/resource/c21106f9-3ef5-4f3a-8604-f992b4db7512/download/permits-issued.csv',
-            'https://data.sanantonio.gov/dataset/7d6a2a15-e55c-49d7-b5e2-b4ec3495048c/resource/fbb7202e-c6c1-475b-849e-c5c2cfb65833/download/applications-submitted.csv',
+            'https://data.sanantonio.gov/dataset/05012dcb-ba1b-4ade-b5f3-7403bc7f52eb/resource/c21106f9-3ef5-4f3a-8604-f992b4db7512/download/permits_issued.csv',
+            'https://data.sanantonio.gov/dataset/05012dcb-ba1b-4ade-b5f3-7403bc7f52eb/resource/fbb7202e-c6c1-475b-849e-c5c2cfb65833/download/accelasubmitpermitsextract.csv',
         ]
         # Also try ArcGIS
         self.arcgis_urls = [
