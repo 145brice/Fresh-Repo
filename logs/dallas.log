@@ -1,0 +1,24 @@
+2025-12-03 20:10:10 - dallas - INFO - 🏗️  Dallas TX Construction Permits Scraper
+2025-12-03 20:10:10 - dallas - INFO - Attempt 1/1: arcgis_api
+2025-12-03 20:10:10 - dallas - INFO - No more data at offset 0
+2025-12-03 20:10:10 - dallas - ERROR - All Dallas endpoints failed
+2025-12-03 20:10:10 - dallas - WARNING - ❌ No permits scraped for dallas
+2025-12-03 20:10:40 - dallas - INFO - 🏗️  Dallas TX Construction Permits Scraper
+2025-12-03 20:10:40 - dallas - INFO - Attempt 1/1: arcgis_api
+2025-12-03 20:11:10 - dallas - INFO - ✅ Success! Got 5000 permits
+2025-12-03 20:11:10 - dallas - INFO - ✅ Scraped 5000 permits for dallas
+2025-12-03 20:11:59 - dallas - INFO - 🏗️  Dallas TX Construction Permits Scraper
+2025-12-03 20:11:59 - dallas - INFO - Attempt 1/1: arcgis_api
+2025-12-03 20:12:30 - dallas - INFO - ✅ Success! Got 5000 permits
+2025-12-03 20:12:30 - dallas - INFO - ✅ Scraped 5000 permits for dallas
+2025-12-03 20:13:41 - dallas - INFO - 🏗️  Dallas TX Construction Permits Scraper
+2025-12-03 20:13:41 - dallas - INFO - Attempt 1/1: arcgis_api
+2025-12-03 20:14:07 - dallas - INFO - ✅ Success! Got 5000 permits
+2025-12-03 20:14:07 - dallas - INFO - ✅ Scraped 5000 permits for dallas
+2025-12-03 20:25:26 - dallas - INFO - 🏗️  Dallas TX Construction Permits Scraper
+2025-12-03 20:25:26 - dallas - INFO - Attempt 1/1: arcgis_api
+2025-12-03 20:26:01 - dallas - INFO - ✅ Success! Got 5000 permits
+2025-12-03 20:26:01 - dallas - INFO - ✅ Scraped 5000 permits for dallas
+2025-12-03 21:44:58 - dallas - INFO - 🏗️  Dallas TX Construction Permits Scraper
+2025-12-03 21:44:58 - dallas - INFO - Attempt 1/1: arcgis_api
+2025-12-03 21:45:30 - dallas - INFO - ✅ Success! Got 5000 permits

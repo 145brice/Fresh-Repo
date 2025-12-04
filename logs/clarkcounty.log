@@ -1,0 +1,5 @@
+2025-12-03 17:15:08 - clarkcounty - INFO - 🏗️  Clark County NV Construction Permits Scraper
+2025-12-03 17:15:08 - clarkcounty - WARNING - Attempt 1 failed: 404 Client Error: Not Found for url: https://www.clarkcountynv.gov/parcel-search/permit-list
+2025-12-03 17:15:08 - clarkcounty - WARNING - Attempt 2 failed: 404 Client Error: Not Found for url: https://www.clarkcountynv.gov/parcel-search/permit-list
+2025-12-03 17:15:08 - clarkcounty - WARNING - Attempt 3 failed: 404 Client Error: Not Found for url: https://www.clarkcountynv.gov/parcel-search/permit-list
+2025-12-03 17:15:08 - clarkcounty - ERROR - All retry attempts failed

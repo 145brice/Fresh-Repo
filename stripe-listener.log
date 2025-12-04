@@ -1,0 +1,12 @@
+Checking for new versions...
+
+A newer version of the Stripe CLI is available, please update to: v1.33.0
+Getting ready...
+
+time="Sun, 30 Nov 2025 14:32:48 CST" level=fatal msg="Error while authenticating with Stripe: Authorization failed, status=403, body={
+  "error": {
+    "message": "For security reasons, the Stripe CLI only permits the use of restricted keys when in live mode. To generate restricted keys for use in live mode, use the `stripe login` command.",
+    "type": "invalid_request_error"
+  }
+}
+"

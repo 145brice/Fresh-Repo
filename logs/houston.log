@@ -1,0 +1,144 @@
+2025-12-01 09:46:16 - houston - INFO - 🏗️  Houston TX Construction Permits Scraper
+2025-12-01 09:46:16 - houston - INFO - Attempt 1/2: arcgis_download
+2025-12-01 09:46:16 - houston - WARNING - Attempt 1/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 2s...
+2025-12-01 09:46:18 - houston - WARNING - Attempt 2/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 4s...
+2025-12-01 09:46:22 - houston - WARNING - Attempt 3/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 8s...
+2025-12-01 09:46:30 - houston - ERROR - Final attempt failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+2025-12-01 09:46:30 - houston - ERROR - GeoJSON download failed: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+Traceback (most recent call last):
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/houston.py", line 160, in _try_arcgis_download
+    data = self._fetch_geojson(url)
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/utils.py", line 70, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/houston.py", line 37, in _fetch_geojson
+    response.raise_for_status()
+  File "/Users/briceleasure/Library/Python/3.9/lib/python/site-packages/requests/models.py", line 1021, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+2025-12-01 09:46:30 - houston - INFO - Attempt 2/2: arcgis_api
+2025-12-01 09:46:30 - houston - INFO - No more data at offset 0
+2025-12-01 09:46:30 - houston - ERROR - All Houston endpoints failed
+2025-12-01 09:46:31 - houston - WARNING - ❌ No permits scraped for houston
+2025-12-01 15:13:14 - houston - INFO - 🏗️  Houston TX Construction Permits Scraper
+2025-12-01 15:13:14 - houston - INFO - Attempt 1/2: arcgis_download
+2025-12-01 15:13:14 - houston - WARNING - Attempt 1/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 2s...
+2025-12-01 15:13:16 - houston - WARNING - Attempt 2/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 4s...
+2025-12-01 15:13:20 - houston - WARNING - Attempt 3/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 8s...
+2025-12-01 15:13:28 - houston - ERROR - Final attempt failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+2025-12-01 15:13:28 - houston - ERROR - GeoJSON download failed: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+Traceback (most recent call last):
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/houston.py", line 160, in _try_arcgis_download
+    data = self._fetch_geojson(url)
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/utils.py", line 70, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/houston.py", line 37, in _fetch_geojson
+    response.raise_for_status()
+  File "/Users/briceleasure/Library/Python/3.9/lib/python/site-packages/requests/models.py", line 1021, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+2025-12-01 15:13:28 - houston - INFO - Attempt 2/2: arcgis_api
+2025-12-01 15:13:29 - houston - INFO - No more data at offset 0
+2025-12-01 15:13:29 - houston - ERROR - All Houston endpoints failed
+2025-12-02 05:28:04 - houston - INFO - 🏗️  Houston TX Construction Permits Scraper
+2025-12-02 05:28:04 - houston - INFO - Attempt 1/2: arcgis_download
+2025-12-02 05:28:04 - houston - WARNING - Attempt 1/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 2s...
+2025-12-02 05:28:06 - houston - WARNING - Attempt 2/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 4s...
+2025-12-02 05:28:10 - houston - WARNING - Attempt 3/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 8s...
+2025-12-02 05:28:18 - houston - ERROR - Final attempt failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+2025-12-02 05:28:18 - houston - ERROR - GeoJSON download failed: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+Traceback (most recent call last):
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/houston.py", line 160, in _try_arcgis_download
+    data = self._fetch_geojson(url)
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/utils.py", line 70, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/houston.py", line 37, in _fetch_geojson
+    response.raise_for_status()
+  File "/Users/briceleasure/Library/Python/3.9/lib/python/site-packages/requests/models.py", line 1021, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+2025-12-02 05:28:18 - houston - INFO - Attempt 2/2: arcgis_api
+2025-12-02 05:28:19 - houston - INFO - No more data at offset 0
+2025-12-02 05:28:19 - houston - ERROR - All Houston endpoints failed
+2025-12-02 05:28:19 - houston - WARNING - ❌ No permits scraped for houston
+2025-12-02 20:39:27 - houston - INFO - 🏗️  Houston TX Construction Permits Scraper
+2025-12-02 20:39:27 - houston - INFO - Attempt 1/2: arcgis_download
+2025-12-02 20:39:27 - houston - WARNING - Attempt 1/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 2s...
+2025-12-02 20:39:30 - houston - WARNING - Attempt 2/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 4s...
+2025-12-02 20:39:34 - houston - WARNING - Attempt 3/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 8s...
+2025-12-02 20:39:42 - houston - ERROR - Final attempt failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+2025-12-02 20:39:42 - houston - ERROR - GeoJSON download failed: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+Traceback (most recent call last):
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/houston.py", line 160, in _try_arcgis_download
+    data = self._fetch_geojson(url)
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/utils.py", line 70, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/houston.py", line 37, in _fetch_geojson
+    response.raise_for_status()
+  File "/Users/briceleasure/Library/Python/3.9/lib/python/site-packages/requests/models.py", line 1021, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+2025-12-02 20:39:42 - houston - INFO - Attempt 2/2: arcgis_api
+2025-12-02 20:39:42 - houston - INFO - No more data at offset 0
+2025-12-02 20:39:42 - houston - ERROR - All Houston endpoints failed
+2025-12-03 19:25:52 - houston - INFO - 🏗️  Houston TX Construction Permits Scraper
+2025-12-03 19:25:52 - houston - INFO - Attempt 1/2: arcgis_download
+2025-12-03 19:25:52 - houston - WARNING - Attempt 1/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 2s...
+2025-12-03 19:25:54 - houston - WARNING - Attempt 2/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 4s...
+2025-12-03 19:25:59 - houston - WARNING - Attempt 3/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 8s...
+2025-12-03 19:26:07 - houston - ERROR - Final attempt failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+2025-12-03 19:26:07 - houston - ERROR - GeoJSON download failed: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+Traceback (most recent call last):
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/houston.py", line 160, in _try_arcgis_download
+    data = self._fetch_geojson(url)
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/utils.py", line 70, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/houston.py", line 37, in _fetch_geojson
+    response.raise_for_status()
+  File "/Users/briceleasure/Library/Python/3.9/lib/python/site-packages/requests/models.py", line 1021, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+2025-12-03 19:26:07 - houston - INFO - Attempt 2/2: arcgis_api
+2025-12-03 19:26:07 - houston - INFO - No more data at offset 0
+2025-12-03 19:26:07 - houston - ERROR - All Houston endpoints failed
+2025-12-03 19:26:07 - houston - WARNING - ❌ No permits scraped for houston
+2025-12-03 19:29:51 - houston - INFO - 🏗️  Houston TX Construction Permits Scraper
+2025-12-03 19:29:51 - houston - INFO - Attempt 1/2: arcgis_download
+2025-12-03 19:29:51 - houston - WARNING - Attempt 1/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 2s...
+2025-12-03 19:29:53 - houston - WARNING - Attempt 2/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 4s...
+2025-12-03 19:29:57 - houston - WARNING - Attempt 3/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 8s...
+2025-12-03 19:30:06 - houston - ERROR - Final attempt failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+2025-12-03 19:30:06 - houston - ERROR - GeoJSON download failed: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+Traceback (most recent call last):
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/houston.py", line 160, in _try_arcgis_download
+    data = self._fetch_geojson(url)
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/utils.py", line 70, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/houston.py", line 37, in _fetch_geojson
+    response.raise_for_status()
+  File "/Users/briceleasure/Library/Python/3.9/lib/python/site-packages/requests/models.py", line 1021, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+2025-12-03 19:30:06 - houston - INFO - Attempt 2/2: arcgis_api
+2025-12-03 19:30:06 - houston - INFO - No more data at offset 0
+2025-12-03 19:30:06 - houston - ERROR - All Houston endpoints failed
+2025-12-03 19:30:06 - houston - WARNING - ❌ No permits scraped for houston
+2025-12-03 21:43:28 - houston - INFO - 🏗️  Houston TX Construction Permits Scraper
+2025-12-03 21:43:28 - houston - INFO - Attempt 1/2: arcgis_download
+2025-12-03 21:43:29 - houston - WARNING - Attempt 1/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 2s...
+2025-12-03 21:43:31 - houston - WARNING - Attempt 2/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 4s...
+2025-12-03 21:43:35 - houston - WARNING - Attempt 3/4 failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson. Retrying in 8s...
+2025-12-03 21:43:43 - houston - ERROR - Final attempt failed for _fetch_geojson: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+2025-12-03 21:43:43 - houston - ERROR - GeoJSON download failed: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+Traceback (most recent call last):
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/houston.py", line 160, in _try_arcgis_download
+    data = self._fetch_geojson(url)
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/utils.py", line 70, in wrapper
+    return func(*args, **kwargs)
+  File "/Users/briceleasure/Desktop/contractor-leads-saas/backend/scrapers/houston.py", line 37, in _fetch_geojson
+    response.raise_for_status()
+  File "/Users/briceleasure/Library/Python/3.9/lib/python/site-packages/requests/models.py", line 1021, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://cohgis-mycity.opendata.arcgis.com/api/v3/datasets/building-permits/downloads/data?format=geojson
+2025-12-03 21:43:43 - houston - INFO - Attempt 2/2: arcgis_api
+2025-12-03 21:43:43 - houston - INFO - No more data at offset 0
+2025-12-03 21:43:43 - houston - ERROR - All Houston endpoints failed

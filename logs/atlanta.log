@@ -1,0 +1,37 @@
+2025-12-01 14:36:31 - atlanta - INFO - 🏗️  Atlanta GA Construction Permits Scraper
+2025-12-01 14:36:31 - atlanta - INFO - Trying endpoint: https://services1.arcgis.com/2iuE39TFJByDB5pA/arcgis/rest/services/Building_Permits/FeatureServer/0/query
+2025-12-01 14:36:31 - atlanta - INFO - No more data at offset 0
+2025-12-02 20:39:42 - atlanta - INFO - 🏗️  Atlanta GA Construction Permits Scraper
+2025-12-02 20:39:42 - atlanta - INFO - Trying endpoint: https://services1.arcgis.com/2iuE39TFJByDB5pA/arcgis/rest/services/Building_Permits/FeatureServer/0/query
+2025-12-02 20:39:42 - atlanta - INFO - No more data at offset 0
+2025-12-03 03:38:40 - atlanta - INFO - 🏗️  Atlanta GA Construction Permits Scraper
+2025-12-03 03:38:40 - atlanta - INFO - Trying endpoint: https://services1.arcgis.com/2iuE39TFJByDB5pA/arcgis/rest/services/Building_Permits/FeatureServer/0/query
+2025-12-03 03:38:41 - atlanta - INFO - No more data at offset 0
+2025-12-03 14:25:06 - atlanta - INFO - 🏗️  Atlanta GA Construction Permits Scraper (Selenium)
+2025-12-03 14:25:13 - atlanta - INFO - Chrome driver initialized successfully
+2025-12-03 14:25:13 - atlanta - INFO - Loading https://aca-prod.accela.com/ATLANTA_GA/Cap/CapHome.aspx?module=Building&customglobalsearch=true
+2025-12-03 14:26:40 - atlanta - INFO - Found element with css: #ctl00_PlaceHolderMain_btnNewSearch
+2025-12-03 14:26:45 - atlanta - INFO - Found element with css: table.ACA_GridView
+2025-12-03 14:26:45 - atlanta - INFO - Found 15 elements with css: table.ACA_GridView tr
+2025-12-03 14:27:01 - atlanta - INFO - No next page button found
+2025-12-03 14:27:01 - atlanta - INFO - Chrome driver closed
+2025-12-03 14:28:06 - atlanta - INFO - 🏗️  Atlanta GA Construction Permits Scraper (Selenium)
+2025-12-03 14:28:09 - atlanta - INFO - Chrome driver initialized successfully
+2025-12-03 14:28:09 - atlanta - INFO - Loading https://aca-prod.accela.com/ATLANTA_GA/Cap/CapHome.aspx?module=Building&customglobalsearch=true
+2025-12-03 14:29:35 - atlanta - INFO - Found element with css: #ctl00_PlaceHolderMain_btnNewSearch
+2025-12-03 14:29:41 - atlanta - INFO - Found element with css: table.ACA_GridView
+2025-12-03 14:29:41 - atlanta - INFO - Found 15 elements with css: table.ACA_GridView tr
+2025-12-03 14:29:57 - atlanta - INFO - No next page button found
+2025-12-03 14:29:57 - atlanta - INFO - Chrome driver closed
+2025-12-03 14:30:55 - atlanta - INFO - 🏗️  Atlanta GA Construction Permits Scraper (Selenium)
+2025-12-03 14:30:58 - atlanta - INFO - Chrome driver initialized successfully
+2025-12-03 14:30:58 - atlanta - INFO - Loading https://aca-prod.accela.com/ATLANTA_GA/Cap/CapHome.aspx?module=Building&customglobalsearch=true
+2025-12-03 14:32:28 - atlanta - INFO - Found element with css: #ctl00_PlaceHolderMain_btnNewSearch
+2025-12-03 14:32:33 - atlanta - INFO - Found 5 data rows with css: table.ACA_GridView tr.ACA_TabRow_Odd
+2025-12-03 14:32:49 - atlanta - INFO - No next page button found
+2025-12-03 14:32:49 - atlanta - INFO - Chrome driver closed
+2025-12-03 14:33:42 - atlanta - INFO - 🏗️  Atlanta GA Construction Permits Scraper (GIS Portal)
+2025-12-03 14:33:45 - atlanta - INFO - Chrome driver initialized successfully
+2025-12-03 14:33:45 - atlanta - INFO - Loading https://gis.atlantaga.gov/buildingpermittracker/?page=Search-All-Permits
+2025-12-03 14:35:23 - atlanta - WARNING - No permit table found, trying to find any data rows
+2025-12-03 14:35:23 - atlanta - INFO - Chrome driver closed

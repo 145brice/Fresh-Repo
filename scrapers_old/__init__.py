@@ -1,0 +1,1 @@
+# This file makes Python treat scrapers as a package
