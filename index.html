@@ -1512,7 +1512,7 @@
 
             adminData.stats = {
                 totalCities: cities.length,
-                totalLeads: leads.length,
+                totalLeads: cities.reduce((sum, city) => sum + (city.leads || 0), 0),
                 daysOfData: new Set(leads.map(lead => lead.date)).size,
                 activeCities: cities.filter(city => city.leads > 0).length
             };
