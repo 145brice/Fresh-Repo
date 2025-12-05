@@ -12,14 +12,14 @@
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
-        import { getFirestore, collection, addDoc, writeBatch, doc } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+        import { getFirestore, collection, addDoc, writeBatch, doc, getDocs } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 
         // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBGpgnX5JFpmu2hnUploVR50t2X7Uqk_-E",
-            authDomain: "permits-19158.firebaseapp.com",
-            projectId: "permits-19158",
-            storageBucket: "permits-19158.firebasestorage.app",
+            authDomain: "edge-permits.firebaseapp.com",
+            projectId: "edge-permits",
+            storageBucket: "edge-permits.firebasestorage.app",
             messagingSenderId: "963119389978",
             appId: "1:963119389978:web:255453c4794988c3f8e0a3",
             measurementId: "G-YX2270HJG7"
@@ -46,60 +46,112 @@
         ];
 
         const leadsData = [
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110000', address: '3055 Broadway', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110001', address: '4109 Nolensville Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110002', address: '5430 Church St', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110003', address: '4696 Franklin Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110004', address: '8578 Hillsboro Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110005', address: '2809 Charlotte Ave', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110006', address: '7139 Murfreesboro Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110007', address: '8089 Charlotte Ave', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110008', address: '1725 Dickerson Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110009', address: '6513 Nolensville Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110010', address: '7123 Nolensville Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110011', address: '9551 Broadway', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251010012', address: '2430 Murfreesboro Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110013', address: '560 Lebanon Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251010014', address: '8380 Dickerson Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251010015', address: '6116 Murfreesboro Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110016', address: '3172 Broadway', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110017', address: '1120 Woodland St', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110018', address: '8067 West End Ave', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110019', address: '7965 Broadway', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110020', address: '4125 Nolensville Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110021', address: '2309 Franklin Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110022', address: '5040 21st Ave', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110023', address: '1876 Dickerson Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110024', address: '1593 Broadway', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110025', address: '1990 Lebanon Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110026', address: '9084 Franklin Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110027', address: '3587 Charlotte Ave', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110028', address: '4239 Murfreesboro Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110029', address: '6904 Franklin Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110030', address: '9394 Broadway', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110031', address: '7119 Broadway', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110032', address: '6393 Murfreesboro Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110033', address: '9357 21st Ave', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110034', address: '4554 Dickerson Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110035', address: '8387 Charlotte Ave', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110036', address: '333 West End Ave', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110037', address: '9758 Broadway', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110038', address: '7679 Church St', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110039', address: '8248 Lebanon Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110040', address: '9048 Nolensville Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110041', address: '8704 Lebanon Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110042', address: '7965 Broadway', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110043', address: '3336 Charlotte Ave', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110044', address: '9888 Nolensville Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110045', address: '3944 Nolensville Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110046', address: '2671 Broadway', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110047', address: '5977 Hillsboro Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110048', address: '5896 Murfreesboro Pike', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251010049', address: '7116 21st Ave', description: '' },
-            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110050', address: '8461 Church St', description: '' }
-        ];
+            // Nashville leads (recent - within last 30 days)
+            { date: '2025-12-04', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251204001', address: '123 Main St, Nashville', description: 'New construction' },
+            { date: '2025-12-04', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251204002', address: '456 Oak Ave, Nashville', description: 'Renovation' },
+            { date: '2025-12-03', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251203001', address: '789 Pine St, Nashville', description: 'Addition' },
+            { date: '2025-12-03', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251203002', address: '321 Elm Dr, Nashville', description: 'Office buildout' },
+            { date: '2025-12-02', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251202001', address: '654 Maple Ln, Nashville', description: 'Kitchen remodel' },
+            { date: '2025-12-02', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251202002', address: '987 Cedar St, Nashville', description: 'Retail space' },
+            { date: '2025-12-01', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251201001', address: '147 Birch Ave, Nashville', description: 'Bathroom addition' },
+            { date: '2025-12-01', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251201002', address: '258 Walnut St, Nashville', description: 'Restaurant renovation' },
+            { date: '2025-11-30', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251130001', address: '369 Spruce St, Nashville', description: 'Deck construction' },
+            { date: '2025-11-30', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251130002', address: '741 Ash Dr, Nashville', description: 'Warehouse expansion' },
+            { date: '2025-11-29', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251129001', address: '852 Poplar Ave, Nashville', description: 'Home office' },
+            { date: '2025-11-29', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251129002', address: '963 Hickory Ln, Nashville', description: 'Medical office' },
+            { date: '2025-11-28', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251128001', address: '159 Dogwood St, Nashville', description: 'Garage conversion' },
+            { date: '2025-11-28', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251128002', address: '357 Magnolia Dr, Nashville', description: 'Mixed-use development' },
 
-        async function populateFirebase() {
+            // Nashville leads (Nov 27 - Nov 4)
+            { date: '2025-11-27', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251127001', address: '468 Willow St, Nashville', description: 'Basement finish' },
+            { date: '2025-11-27', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251127002', address: '579 Juniper Ln, Nashville', description: 'Storefront renovation' },
+            { date: '2025-11-26', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251126001', address: '680 Cypress Ave, Nashville', description: 'Roof replacement' },
+            { date: '2025-11-26', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251126002', address: '791 Redwood Dr, Nashville', description: 'Bank branch' },
+            { date: '2025-11-25', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251125001', address: '802 Sycamore St, Nashville', description: 'Fence installation' },
+            { date: '2025-11-25', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251125002', address: '913 Palm Ln, Nashville', description: 'Auto repair shop' },
+            { date: '2025-11-24', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251124001', address: '024 Laurel Ave, Nashville', description: 'Deck addition' },
+            { date: '2025-11-24', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251124002', address: '135 Chestnut Dr, Nashville', description: 'Dental office' },
+            { date: '2025-11-23', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251123001', address: '246 Beech St, Nashville', description: 'Pool house' },
+            { date: '2025-11-23', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251123002', address: '357 Fir Ln, Nashville', description: 'Grocery store' },
+            { date: '2025-11-22', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251122001', address: '468 Hemlock Ave, Nashville', description: 'Shed construction' },
+            { date: '2025-11-22', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251122002', address: '579 Larch Dr, Nashville', description: 'Pharmacy' },
+            { date: '2025-11-21', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251121001', address: '680 Pine St, Nashville', description: 'Attic conversion' },
+            { date: '2025-11-21', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251121002', address: '791 Spruce Ln, Nashville', description: 'Fitness center' },
+            { date: '2025-11-20', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251120001', address: '802 Cedar Ave, Nashville', description: 'Window replacement' },
+            { date: '2025-11-20', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251120002', address: '913 Oak Dr, Nashville', description: 'Coffee shop' },
+            { date: '2025-11-19', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251119001', address: '024 Maple St, Nashville', description: 'Flooring update' },
+            { date: '2025-11-19', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251119002', address: '135 Elm Ln, Nashville', description: 'Bookstore' },
+            { date: '2025-11-18', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251118001', address: '246 Birch Ave, Nashville', description: 'Painting' },
+            { date: '2025-11-18', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251118002', address: '357 Ash Dr, Nashville', description: 'Salon' },
+            { date: '2025-11-17', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251117001', address: '468 Poplar St, Nashville', description: 'Landscaping' },
+            { date: '2025-11-17', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251117002', address: '579 Hickory Ln, Nashville', description: 'Restaurant' },
+            { date: '2025-11-16', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251116001', address: '680 Dogwood Ave, Nashville', description: 'HVAC replacement' },
+            { date: '2025-11-16', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251116002', address: '791 Magnolia Dr, Nashville', description: 'Office space' },
+            { date: '2025-11-15', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251115001', address: '802 Willow St, Nashville', description: 'Electrical upgrade' },
+            { date: '2025-11-15', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251115002', address: '913 Juniper Ln, Nashville', description: 'Retail store' },
+            { date: '2025-11-14', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251114001', address: '024 Cypress Ave, Nashville', description: 'Plumbing work' },
+            { date: '2025-11-14', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251114002', address: '135 Redwood Dr, Nashville', description: 'Medical clinic' },
+            { date: '2025-11-13', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251113001', address: '246 Sycamore St, Nashville', description: 'Insulation' },
+            { date: '2025-11-13', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251113002', address: '357 Palm Ln, Nashville', description: 'Pet store' },
+            { date: '2025-11-12', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251112001', address: '468 Laurel Ave, Nashville', description: 'Drywall repair' },
+            { date: '2025-11-12', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251112002', address: '579 Chestnut Dr, Nashville', description: 'Hardware store' },
+            { date: '2025-11-11', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251111001', address: '680 Beech St, Nashville', description: 'Tile work' },
+            { date: '2025-11-11', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251111002', address: '791 Fir Ln, Nashville', description: 'Bakery' },
+            { date: '2025-11-10', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251110001', address: '802 Hemlock Ave, Nashville', description: 'Siding replacement' },
+            { date: '2025-11-10', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251110002', address: '913 Larch Dr, Nashville', description: 'Laundromat' },
+            { date: '2025-11-09', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251109001', address: '024 Pine St, Nashville', description: 'Gutters' },
+            { date: '2025-11-09', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251109002', address: '135 Spruce Ln, Nashville', description: 'Barber shop' },
+            { date: '2025-11-08', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251108001', address: '246 Cedar Ave, Nashville', description: 'Driveway' },
+            { date: '2025-11-08', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251108002', address: '357 Oak Dr, Nashville', description: 'Ice cream shop' },
+            { date: '2025-11-07', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251107001', address: '468 Maple St, Nashville', description: 'Patio' },
+            { date: '2025-11-07', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251107002', address: '579 Elm Ln, Nashville', description: 'Jewelry store' },
+            { date: '2025-11-06', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251106001', address: '680 Birch Ave, Nashville', description: 'Fence' },
+            { date: '2025-11-06', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251106002', address: '791 Ash Dr, Nashville', description: 'Florist' },
+            { date: '2025-11-05', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251105001', address: '802 Poplar St, Nashville', description: 'Carport' },
+            { date: '2025-11-05', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251105002', address: '913 Hickory Ln, Nashville', description: 'Bike shop' },
+            { date: '2025-11-04', city: 'Nashville', permit_type: 'Residential', permit_number: 'NSH251104001', address: '024 Dogwood Ave, Nashville', description: 'Pergola' },
+            { date: '2025-11-04', city: 'Nashville', permit_type: 'Commercial', permit_number: 'NSH251104002', address: '135 Magnolia Dr, Nashville', description: 'Art gallery' },
+
+            // Chattanooga leads (recent)
+            { date: '2025-12-04', city: 'Chattanooga', permit_type: 'Residential', permit_number: 'CHT251204001', address: '123 Main St, Chattanooga', description: 'New construction' },
+            { date: '2025-12-03', city: 'Chattanooga', permit_type: 'Commercial', permit_number: 'CHT251203001', address: '456 Oak Ave, Chattanooga', description: 'Renovation' },
+            { date: '2025-12-02', city: 'Chattanooga', permit_type: 'Residential', permit_number: 'CHT251202001', address: '789 Pine St, Chattanooga', description: 'Addition' },
+            { date: '2025-12-01', city: 'Chattanooga', permit_type: 'Commercial', permit_number: 'CHT251201001', address: '321 Elm Dr, Chattanooga', description: 'Office buildout' },
+
+            // Austin leads (recent)
+            { date: '2025-12-04', city: 'Austin', permit_type: 'Residential', permit_number: 'AUS251204001', address: '100 Congress Ave, Austin', description: 'Home renovation' },
+            { date: '2025-12-03', city: 'Austin', permit_type: 'Commercial', permit_number: 'AUS251203001', address: '200 6th St, Austin', description: 'Office buildout' },
+
+            // San Antonio leads (recent)
+            { date: '2025-12-04', city: 'San Antonio', permit_type: 'Residential', permit_number: 'SAT251204001', address: '300 Alamo Plaza, San Antonio', description: 'Kitchen remodel' },
+            { date: '2025-12-03', city: 'San Antonio', permit_type: 'Commercial', permit_number: 'SAT251203001', address: '400 River Walk, San Antonio', description: 'Restaurant renovation' },
+
+            // Houston leads (recent)
+            { date: '2025-12-04', city: 'Houston', permit_type: 'Commercial', permit_number: 'HOU251204001', address: '600 Main St, Houston', description: 'Warehouse construction' },
+            { date: '2025-12-03', city: 'Houston', permit_type: 'Residential', permit_number: 'HOU251203001', address: '700 Texas Ave, Houston', description: 'Pool installation' },
+
+            // Charlotte leads (recent)
+            { date: '2025-12-04', city: 'Charlotte', permit_type: 'Residential', permit_number: 'CLT251204001', address: '900 Tryon St, Charlotte', description: 'Garage conversion' },
+
+            // Phoenix leads (recent)
+            { date: '2025-12-04', city: 'Phoenix', permit_type: 'Residential', permit_number: 'PHX251204001', address: '1000 Camelback Rd, Phoenix', description: 'Solar panel installation' },
+            { date: '2025-12-03', city: 'Phoenix', permit_type: 'Commercial', permit_number: 'PHX251203001', address: '1100 Central Ave, Phoenix', description: 'Office renovation' },
+
+            // Seattle leads (recent)
+            { date: '2025-12-04', city: 'Seattle', permit_type: 'Residential', permit_number: 'SEA251204001', address: '1500 Pike St, Seattle', description: 'Basement finish' },
+
+            // Philadelphia leads (recent)
+            { date: '2025-12-04', city: 'Philadelphia', permit_type: 'Commercial', permit_number: 'PHL251204001', address: '1300 Market St, Philadelphia', description: 'Historic renovation' },
+            { date: '2025-12-03', city: 'Philadelphia', permit_type: 'Residential', permit_number: 'PHL251203001', address: '1400 Chestnut St, Philadelphia', description: 'Condo conversion' },
+
+            // Raleigh leads (recent)
+            { date: '2025-12-04', city: 'Raleigh', permit_type: 'Residential', permit_number: 'RAL251204001', address: '1600 Hillsborough St, Raleigh', description: 'Home addition' },
+            { date: '2025-12-03', city: 'Raleigh', permit_type: 'Commercial', permit_number: 'RAL251203001', address: '1700 Glenwood Ave, Raleigh', description: 'Medical office' },
+
+            // Dallas leads (recent)
+            { date: '2025-12-04', city: 'Dallas', permit_type: 'Commercial', permit_number: 'DAL251204001', address: '1800 Elm St, Dallas', description: 'High-rise construction' },
+            { date: '2025-12-03', city: 'Dallas', permit_type: 'Residential', permit_number: 'DAL251203001', address: '1900 Oak Ln, Dallas', description: 'Luxury home' }
+        ];
             const status = document.getElementById('status');
             status.textContent = 'Starting data population...';
 

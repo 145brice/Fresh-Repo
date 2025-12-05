@@ -1354,6 +1354,7 @@
             leads: [],
             stats: { totalCities: 0, totalLeads: 0, daysOfData: 0, activeCities: 0 }
         };
+        let currentCityFilter = 'All Cities';
 
         function showAdminLogin() {
             document.getElementById('admin-login-modal').style.display = 'flex';
@@ -1510,13 +1511,18 @@
             const cities = adminData.cities || [];
             const leads = adminData.leads || [];
 
-            // Get date 7 days ago for filtering
-            const sevenDaysAgo = new Date();
-            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-            const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0];
+            // Get date 30 days ago for filtering
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            const thirtyDaysAgoStr = thirtyDaysAgo.toISOString().split('T')[0];
 
             // Filter leads to only count recent ones
-            const recentLeads = leads.filter(lead => lead.date && lead.date >= sevenDaysAgoStr);
+            let recentLeads = leads.filter(lead => lead.date && lead.date >= thirtyDaysAgoStr);
+
+            // Apply city filter if not "All Cities"
+            if (currentCityFilter !== 'All Cities') {
+                recentLeads = recentLeads.filter(lead => lead.city === currentCityFilter);
+            }
 
             adminData.stats = {
                 totalCities: cities.length,
@@ -1558,19 +1564,24 @@
             const container = document.getElementById('leads-container');
             container.innerHTML = '';
 
-            // Get date 7 days ago
-            const sevenDaysAgo = new Date();
-            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-            const sevenDaysAgoStr = sevenDaysAgo.toISOString().split('T')[0]; // YYYY-MM-DD format
+            // Get date 30 days ago
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            const thirtyDaysAgoStr = thirtyDaysAgo.toISOString().split('T')[0]; // YYYY-MM-DD format
 
-            // Filter leads to only show last 7 days
-            const recentLeads = adminData.leads.filter(lead => {
-                return lead.date && lead.date >= sevenDaysAgoStr;
+            // Filter leads to only show last 30 days and current city filter
+            let filteredLeads = adminData.leads.filter(lead => {
+                return lead.date && lead.date >= thirtyDaysAgoStr;
             });
+
+            // Apply city filter if not "All Cities"
+            if (currentCityFilter !== 'All Cities') {
+                filteredLeads = filteredLeads.filter(lead => lead.city === currentCityFilter);
+            }
 
             // Group leads by date
             const leadsByDate = {};
-            recentLeads.forEach(lead => {
+            filteredLeads.forEach(lead => {
                 if (!leadsByDate[lead.date]) {
                     leadsByDate[lead.date] = [];
                 }
@@ -1605,26 +1616,17 @@
 
             // Show message if no recent leads
             if (sortedDates.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #64748b;">No permits found in the last 7 days</div>';
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #64748b;">No permits found in the last 30 days</div>';
             }
         }
 
         function filterByCity(cityName) {
-            const filteredLeads = cityName === 'All Cities' ?
-                adminData.leads :
-                adminData.leads.filter(lead => lead.city === cityName);
-
-            // Update the global data temporarily for display
-            const originalLeads = adminData.leads;
-            adminData.leads = filteredLeads;
+            currentCityFilter = cityName;
             updateLeadsTable();
             updateStatsDisplay();
 
             // Update filter display
             document.getElementById('current-filter').textContent = cityName;
-
-            // Restore original data
-            adminData.leads = originalLeads;
         }
 
         // Allow Enter key in password field
@@ -1695,7 +1697,7 @@
             </div>
             <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: center;">
                 <div style="font-size: 32px; font-weight: 700; color: #059669; margin-bottom: 10px;" id="recent-leads">0</div>
-                <div style="color: #64748b;">Recent Leads (7 days)</div>
+                <div style="color: #64748b;">Recent Leads (30 days)</div>
             </div>
             <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: center;">
                 <div style="font-size: 32px; font-weight: 700; color: #f59e0b; margin-bottom: 10px;" id="days-data">0</div>
@@ -1718,7 +1720,7 @@
         <!-- Filter and Leads -->
         <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="color: #1e293b; margin: 0;">📋 Recent Leads (Last 7 Days)</h3>
+                <h3 style="color: #1e293b; margin: 0;">📋 Recent Leads (Last 30 Days)</h3>
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <span style="color: #64748b;">Showing: <span id="current-filter">All Cities</span></span>
                     <button onclick="filterByCity('All Cities')" style="background: #2563eb; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">Show All Cities</button>
