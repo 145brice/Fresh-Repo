@@ -732,6 +732,7 @@
                 <a href="/" style="color: white; text-decoration: none; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: background 0.3s; background: rgba(255,255,255,0.2);">Home</a>
                 <a href="dashboard/login.html" style="color: white; text-decoration: none; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: background 0.3s;">Login</a>
                 <a href="dashboard/signup.html" style="background: rgba(255,255,255,0.2); color: white; text-decoration: none; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: background 0.3s;">Sign Up</a>
+                <a href="#" onclick="showAdminLogin()" style="color: white; text-decoration: none; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: background 0.3s; background: rgba(255,255,255,0.1);">Admin</a>
             </nav>
         </div>
     </header>
@@ -1283,6 +1284,202 @@
                 alert('Error creating checkout session. Please try again.');
             }
         }
+
+        // Admin Functions
+        function showAdminLogin() {
+            document.getElementById('admin-login-modal').style.display = 'flex';
+            document.getElementById('admin-password').focus();
+        }
+
+        function hideAdminLogin() {
+            document.getElementById('admin-login-modal').style.display = 'none';
+            document.getElementById('admin-password').value = '';
+        }
+
+        function checkAdminPassword() {
+            const password = document.getElementById('admin-password').value;
+            if (password === 'Edge123!') {
+                hideAdminLogin();
+                showAdminDashboard();
+            } else {
+                alert('Incorrect password');
+                document.getElementById('admin-password').value = '';
+            }
+        }
+
+        function showAdminDashboard() {
+            document.getElementById('admin-dashboard').style.display = 'block';
+            document.getElementById('admin-dashboard').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function hideAdminDashboard() {
+            document.getElementById('admin-dashboard').style.display = 'none';
+        }
+
+        // Allow Enter key in password field
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('admin-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkAdminPassword();
+                }
+            });
+        });
     </script>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 30px; border-radius: 10px; max-width: 400px; width: 90%; text-align: center;">
+            <h3 style="margin-bottom: 20px; color: #1e293b;">Admin Access</h3>
+            <input type="password" id="admin-password" placeholder="Enter password" style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 16px; margin-bottom: 20px;">
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button onclick="checkAdminPassword()" style="background: #2563eb; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-weight: 500;">Login</button>
+                <button onclick="hideAdminLogin()" style="background: #94a3b8; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" style="display: none; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 30px; margin: 40px auto; max-width: 1200px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h2 style="color: #1e293b; margin: 0;">Admin Dashboard</h2>
+            <button onclick="hideAdminDashboard()" style="background: #dc2626; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">Close</button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 30px;">
+            <!-- System Status -->
+            <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <h3 style="color: #1e293b; margin-bottom: 15px;">System Status</h3>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span>Total Cities:</span>
+                    <span style="font-weight: 600;">13 Live</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span>Payment Ready:</span>
+                    <span style="font-weight: 600; color: #10b981;">7 Cities</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span>Payment Pending:</span>
+                    <span style="font-weight: 600; color: #f59e0b;">6 Cities</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Coming Soon:</span>
+                    <span style="font-weight: 600; color: #94a3b8;">7 Cities</span>
+                </div>
+            </div>
+
+            <!-- Revenue Overview -->
+            <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <h3 style="color: #1e293b; margin-bottom: 15px;">Revenue Overview</h3>
+                <div style="text-align: center;">
+                    <div style="font-size: 32px; font-weight: 700; color: #2563eb; margin-bottom: 10px;">$0</div>
+                    <div style="color: #64748b;">Total Revenue</div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <h3 style="color: #1e293b; margin-bottom: 15px;">Recent Activity</h3>
+                <div style="color: #64748b; font-style: italic;">No recent activity</div>
+            </div>
+        </div>
+
+        <!-- Cities Status Table -->
+        <div style="background: white; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+            <h3 style="color: #1e293b; margin-bottom: 20px;">Cities Status</h3>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f8fafc;">
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e2e8f0; font-weight: 600; color: #374151;">City</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e2e8f0; font-weight: 600; color: #374151;">Status</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e2e8f0; font-weight: 600; color: #374151;">Payment</th>
+                            <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e2e8f0; font-weight: 600; color: #374151;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">Nashville</td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Live</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Ready</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">-</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">Chattanooga</td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Live</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Ready</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">-</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">Raleigh</td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Live</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #f59e0b; font-weight: 600;">Pending</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><button style="background: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">Setup Payment</button></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">Dallas</td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Live</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #f59e0b; font-weight: 600;">Pending</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><button style="background: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">Setup Payment</button></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">Seattle</td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Live</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #f59e0b; font-weight: 600;">Pending</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><button style="background: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">Setup Payment</button></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">Chicago</td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Live</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #f59e0b; font-weight: 600;">Pending</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><button style="background: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">Setup Payment</button></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">Philadelphia</td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Live</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #f59e0b; font-weight: 600;">Pending</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><button style="background: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">Setup Payment</button></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">San Jose</td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Live</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #f59e0b; font-weight: 600;">Pending</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><button style="background: #2563eb; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">Setup Payment</button></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">Austin</td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Live</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Ready</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">-</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">Charlotte</td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Live</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Ready</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">-</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">San Antonio</td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Live</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Ready</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">-</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">Houston</td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Live</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Ready</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">-</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">Phoenix</td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Live</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;"><span style="color: #10b981; font-weight: 600;">Ready</span></td>
+                            <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
