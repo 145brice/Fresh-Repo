@@ -8,7 +8,7 @@ Dead simple contractor leads platform. Seven cities, $47/month each or $97 for a
 
 ## Project Structure
 ```
-contractor-leads-saas/
+contractor-leads-saas/           # Frontend (Netlify)
 ├── index.html                    # Landing page with 7 city buttons + bundle
 ├── dashboard/
 │   ├── dashboard.html           # User dashboard with leads table
@@ -19,9 +19,17 @@ contractor-leads-saas/
 ├── netlify.toml                 # Netlify deployment config
 └── README.md
 
-contractor-leads-backend/         # Separate repository
-├── app.py                       # Flask app with webhook + cron
-├── backend.py                   # Main backend logic
+contractor-leads-backend/         # Backend (Railway)
+├── app.py                       # Permits API (port 8081)
+│   ├── /health
+│   ├── /create-checkout-session
+│   ├── /webhook
+│   └── /create-portal-session
+├── backend.py                   # Admin + Frontend server (port 8082)
+│   ├── / (serves frontend)
+│   ├── /admin (admin dashboard)
+│   ├── /manual_scrape
+│   └── /dashboard
 ├── requirements.txt             # Python dependencies
 ├── scrapers/                    # City scraper modules
 ├── leads/                       # Scraped data storage
@@ -98,12 +106,19 @@ contractor-leads-backend/         # Separate repository
 
 ## Step 4: Deploy Backend to Railway
 
-1. Go to https://railway.app/
-2. Create new project → **Deploy from GitHub**
-3. Connect your **contractor-leads-backend** GitHub repo
-4. Railway will auto-detect Python and deploy
+**Deploy TWO separate services:**
 
-5. Add environment variables in Railway dashboard:
+1. **Permits API** (`app.py`):
+   - Deploy `contractor-leads-backend` repo
+   - Set `PORT=8081`
+   - This handles Stripe, webhooks, subscriptions
+
+2. **Admin + Frontend** (`backend.py`):
+   - Deploy the same repo again (or use different repo)
+   - Set `PORT=8082`
+   - This serves the admin dashboard and static files
+
+Add environment variables to BOTH Railway services:
 
 ```bash
 # Stripe
@@ -137,14 +152,14 @@ PORT=5000
 
 1. Go to https://dashboard.stripe.com/test/webhooks
 2. Click **Add endpoint**
-3. Endpoint URL: `https://your-railway-url.railway.app/webhook`
+3. Endpoint URL: `https://your-permits-api-railway-url.railway.app/webhook`
 4. Select events to listen to:
    - `checkout.session.completed`
    - `invoice.payment_failed`
    - `customer.subscription.deleted`
 5. Add endpoint
 6. Copy the **Signing secret** (starts with `whsec_`)
-7. Add it to Railway as `STRIPE_WEBHOOK_SECRET`
+7. Add it to your **Permits API** Railway service as `STRIPE_WEBHOOK_SECRET`
 
 ---
 
@@ -155,7 +170,7 @@ PORT=5000
 3. Site will deploy instantly
 
 4. **Update config.js:**
-   - Replace `BACKEND_URL` with your Railway URL
+   - Replace `BACKEND_URL` with your **Permits API** Railway URL (port 8081)
 
 5. **Update index.html:**
    - Replace `STRIPE_PRICE_IDS` with your actual price IDs
@@ -164,7 +179,7 @@ PORT=5000
 
 7. Copy your Netlify URL
 
-8. **Update Railway:**
+8. **Update BOTH Railway services:**
    - Add `FRONTEND_URL` env var with your Netlify URL
 
 ---
@@ -185,7 +200,7 @@ PORT=5000
 
 ### Test Daily Email (Manual)
 ```bash
-curl -X POST https://your-railway-url.railway.app/manual-send \
+curl -X POST https://your-permits-api-railway-url.railway.app/manual-send \
   -H "Authorization: Bearer your-secret"
 ```
 
@@ -266,7 +281,7 @@ FIREBASE_CERT_URL
 ## Troubleshooting
 
 **Webhook not working:**
-- Check Railway logs: `railway logs`
+- Check **Permits API** Railway logs: `railway logs`
 - Verify webhook secret matches Stripe
 - Check Stripe webhook dashboard for errors
 
@@ -276,14 +291,13 @@ FIREBASE_CERT_URL
 - Verify SENDGRID_API_KEY has full access
 
 **Daily cron not running:**
-- Railway automatically runs the scheduler
+- Railway automatically runs the scheduler on the Permits API service
 - Check logs at 8 AM Central
-- Test with `/manual-send`
+- Test with `/manual-send` on the Permits API service
 
-**Firebase errors:**
-- Double-check all env vars copied correctly
-- Ensure private_key has \n characters intact
-- Verify Firestore is enabled
+**Admin dashboard not loading:**
+- Check **Admin + Frontend** Railway service is running on port 8082
+- Verify the service has access to the same Firebase credentials
 
 ---
 
@@ -303,9 +317,11 @@ You just send leads every morning. That's it.
 - [ ] Create 4 Stripe products with price IDs
 - [ ] Setup Firebase project and download credentials
 - [ ] Create SendGrid account and verify sender
-- [ ] Deploy backend to Railway with all env vars
-- [ ] Setup Stripe webhook pointing to Railway URL
-- [ ] Update frontend with price IDs and backend URL
+- [ ] Deploy **Permits API** (`app.py`) to Railway with `PORT=8081`
+- [ ] Deploy **Admin + Frontend** (`backend.py`) to Railway with `PORT=8082`
+- [ ] Add all environment variables to BOTH Railway services
+- [ ] Setup Stripe webhook pointing to Permits API Railway URL
+- [ ] Update frontend with price IDs and Permits API backend URL
 - [ ] Deploy frontend to Netlify
 - [ ] Test subscription flow end-to-end
 - [ ] Test manual email send
