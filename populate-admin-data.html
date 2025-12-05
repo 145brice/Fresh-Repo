@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Populate Firebase Admin Data</title>
+</head>
+<body>
+    <h1>Populate Firebase with Admin Data</h1>
+    <button onclick="populateFirebase()">Populate Firebase Collections</button>
+    <div id="status"></div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+        import { getFirestore, collection, addDoc, writeBatch, doc } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBGpgnX5JFpmu2hnUploVR50t2X7Uqk_-E",
+            authDomain: "permits-19158.firebaseapp.com",
+            projectId: "permits-19158",
+            storageBucket: "permits-19158.firebasestorage.app",
+            messagingSenderId: "963119389978",
+            appId: "1:963119389978:web:255453c4794988c3f8e0a3",
+            measurementId: "G-YX2270HJG7"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Mock data
+        const citiesData = [
+            { name: 'Nashville', leads: 7789, files: 2 },
+            { name: 'Chattanooga', leads: 4167, files: 2 },
+            { name: 'Austin', leads: 7, files: 2 },
+            { name: 'Sanantonio', leads: 10030, files: 3 },
+            { name: 'Houston', leads: 5941, files: 2 },
+            { name: 'Charlotte', leads: 100, files: 2 },
+            { name: 'Phoenix', leads: 5971, files: 2 },
+            { name: 'Philadelphia', leads: 5893, files: 1 },
+            { name: 'Seattle', leads: 1387, files: 1 },
+            { name: 'Chicago', leads: 0, files: 0 },
+            { name: 'Raleigh', leads: 2456, files: 2 },
+            { name: 'Dallas', leads: 3890, files: 3 }
+        ];
+
+        const leadsData = [
+            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110000', address: '3055 Broadway', description: '' },
+            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110001', address: '4109 Nolensville Pike', description: '' },
+            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110002', address: '5430 Church St', description: '' },
+            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110003', address: '4696 Franklin Pike', description: '' },
+            { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110004', address: '8578 Hillsboro Pike', description: '' },
+            { date: '2025-11-27', city: 'Chattanooga', permit_type: 'N/A', permit_number: 'CHT251110001', address: '123 Main St', description: '' },
+            { date: '2025-11-27', city: 'Austin', permit_type: 'N/A', permit_number: 'AUS251110001', address: '456 Oak Ave', description: '' },
+            { date: '2025-11-26', city: 'Houston', permit_type: 'N/A', permit_number: 'HOU251110001', address: '789 Pine St', description: '' },
+            { date: '2025-11-26', city: 'Phoenix', permit_type: 'N/A', permit_number: 'PHX251110001', address: '321 Elm St', description: '' }
+        ];
+
+        async function populateFirebase() {
+            const status = document.getElementById('status');
+            status.textContent = 'Starting data population...';
+
+            try {
+                // Clear existing data first
+                await clearCollection('admin_cities');
+                await clearCollection('admin_leads');
+
+                status.textContent = 'Cleared existing data...';
+
+                // Add cities data
+                const batch = writeBatch(db);
+                citiesData.forEach((city, index) => {
+                    const docRef = doc(collection(db, 'admin_cities'));
+                    batch.set(docRef, city);
+                });
+                await batch.commit();
+
+                status.textContent = 'Added cities data...';
+
+                // Add leads data
+                for (const lead of leadsData) {
+                    await addDoc(collection(db, 'admin_leads'), lead);
+                }
+
+                status.textContent = '✅ Successfully populated Firebase with admin data!';
+                console.log('Data populated successfully');
+
+            } catch (error) {
+                status.textContent = '❌ Error: ' + error.message;
+                console.error('Error populating data:', error);
+            }
+        }
+
+        async function clearCollection(collectionName) {
+            const querySnapshot = await getDocs(collection(db, collectionName));
+            const batch = writeBatch(db);
+
+            querySnapshot.forEach((doc) => {
+                batch.delete(doc.ref);
+            });
+
+            await batch.commit();
+        }
+
+        // Make functions available globally
+        window.populateFirebase = populateFirebase;
+    </script>
+</body>
+</html></content>
+<parameter name="filePath">/Users/briceleasure/Desktop/contractor-leads-saas/populate-admin-data.html

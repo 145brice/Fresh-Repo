@@ -1388,15 +1388,12 @@
 
         async function loadAdminData() {
             try {
-                // Try to load from backend API first
-                const citiesResponse = await fetch(`${window.CONFIG.BACKEND_URL}/cities`);
-                const leadsResponse = await fetch(`${window.CONFIG.BACKEND_URL}/leads`);
+                // Try to load from Firebase first
+                await loadDataFromFirebase();
 
-                if (citiesResponse.ok && leadsResponse.ok) {
-                    adminData.cities = await citiesResponse.json();
-                    adminData.leads = await leadsResponse.json();
-                } else {
-                    // Fallback to mock data if backend is not available
+                if (adminData.cities.length === 0 || adminData.leads.length === 0) {
+                    // Fallback to mock data if Firebase is empty
+                    console.log('Firebase data empty, using mock data');
                     loadMockData();
                 }
 
@@ -1404,11 +1401,36 @@
                 updateLeadsTable();
                 calculateStats();
             } catch (error) {
-                console.log('Backend not available, using mock data:', error);
+                console.log('Firebase not available, using mock data:', error);
                 loadMockData();
                 updateCitiesOverview();
                 updateLeadsTable();
                 calculateStats();
+            }
+        }
+
+        async function loadDataFromFirebase() {
+            try {
+                // Load cities data from Firebase
+                const citiesQuery = query(collection(window.firebaseDb, 'admin_cities'), orderBy('name'));
+                const citiesSnapshot = await getDocs(citiesQuery);
+                adminData.cities = citiesSnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+
+                // Load leads data from Firebase
+                const leadsQuery = query(collection(window.firebaseDb, 'admin_leads'), orderBy('date', 'desc'));
+                const leadsSnapshot = await getDocs(leadsQuery);
+                adminData.leads = leadsSnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+
+                console.log('Loaded data from Firebase:', adminData.cities.length, 'cities,', adminData.leads.length, 'leads');
+            } catch (error) {
+                console.error('Error loading from Firebase:', error);
+                throw error;
             }
         }
 
@@ -1547,7 +1569,31 @@
         });
     </script>
 
-    <!-- Admin Login Modal -->
+    <!-- Firebase SDK for Admin Dashboard -->
+    <script type="module">
+        // Firebase imports for admin dashboard
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+        import { getFirestore, collection, getDocs, query, orderBy } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBGpgnX5JFpmu2hnUploVR50t2X7Uqk_-E",
+            authDomain: "permits-19158.firebaseapp.com",
+            projectId: "permits-19158",
+            storageBucket: "permits-19158.firebasestorage.app",
+            messagingSenderId: "963119389978",
+            appId: "1:963119389978:web:255453c4794988c3f8e0a3",
+            measurementId: "G-YX2270HJG7"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Make Firebase available globally for the admin functions
+        window.firebaseApp = app;
+        window.firebaseDb = db;
+    </script>
     <div id="admin-login-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center;">
         <div style="background: white; padding: 30px; border-radius: 10px; max-width: 400px; width: 90%; text-align: center;">
             <h3 style="margin-bottom: 20px; color: #1e293b;">Admin Access</h3>
