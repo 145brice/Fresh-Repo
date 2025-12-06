@@ -1436,28 +1436,27 @@
         }
 
         function loadMockData() {
-            // Real scraped data
+            // Real scraped data - UPDATED FROM ACTUAL CSV FILES
             adminData.cities = [
-                { name: 'Nashville', leads: 7789, files: 2 },
-                { name: 'Chattanooga', leads: 4167, files: 2 },
-                { name: 'Austin', leads: 7, files: 2 },
-                { name: 'San Antonio', leads: 10030, files: 3 },
-                { name: 'Houston', leads: 5941, files: 2 },
-                { name: 'Charlotte', leads: 100, files: 2 },
-                { name: 'Phoenix', leads: 5971, files: 2 },
-                { name: 'Philadelphia', leads: 5893, files: 1 },
-                { name: 'Seattle', leads: 1387, files: 1 },
-                { name: 'Chicago', leads: 0, files: 0 },
-                { name: 'Raleigh', leads: 2456, files: 2 },
-                { name: 'Dallas', leads: 3890, files: 3 }
+                { name: 'Nashville', leads: 5000, files: 1 },
+                { name: 'Chattanooga', leads: 4160, files: 1 },
+                { name: 'Austin', leads: 7, files: 1 },
+                { name: 'San Antonio', leads: 5000, files: 1 },
+                { name: 'Houston', leads: 5891, files: 1 },
+                { name: 'Charlotte', leads: 50, files: 1 },
+                { name: 'Phoenix', leads: 5921, files: 1 },
+                { name: 'Philadelphia', leads: 5961, files: 1 },
+                { name: 'Seattle', leads: 1409, files: 1 },
+                { name: 'Chicago', leads: 5888, files: 1 }
             ];
 
             adminData.leads = [
-                { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110000', address: '3055 Broadway', description: '' },
-                { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110001', address: '4109 Nolensville Pike', description: '' },
-                { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110002', address: '5430 Church St', description: '' },
-                { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110003', address: '4696 Franklin Pike', description: '' },
-                { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110004', address: '8578 Hillsboro Pike', description: '' },
+                // RECENT DECEMBER 2025 PERMITS - Real Data
+                { date: '2025-12-05', city: 'Philadelphia', permit_type: 'Zoning Permit', permit_number: 'ZP-2025-011621', address: '1130 E HAINES ST', description: '' },
+                { date: '2025-12-05', city: 'Philadelphia', permit_type: 'Residential', permit_number: 'RP-2025-011448', address: '2529 S MILDRED ST', description: '' },
+                { date: '2025-12-05', city: 'Philadelphia', permit_type: 'Plumbing Permit', permit_number: 'PP-2025-015190', address: '2240 OAKFORD ST', description: '' },
+                { date: '2025-12-04', city: 'Chicago', permit_type: 'Renovation', permit_number: '101075147', address: '4919 W SCHUBERT AVE', description: '$110,000' },
+                { date: '2025-12-04', city: 'Chicago', permit_type: 'Renovation', permit_number: '101072247', address: '1655 W CORTLAND ST', description: '$350,000' },
                 { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110005', address: '2809 Charlotte Ave', description: '' },
                 { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110006', address: '7139 Murfreesboro Pike', description: '' },
                 { date: '2025-11-28', city: 'Nashville', permit_type: 'N/A', permit_number: 'NSH251110007', address: '8089 Charlotte Ave', description: '' },
