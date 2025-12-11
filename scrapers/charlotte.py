@@ -77,11 +77,10 @@ class CharlottePermitScraper:
 
                     if permit_id not in self.seen_permit_ids:
                         self.seen_permit_ids.add(permit_id)
-                        # Build full address
+                        # Build full address - ALWAYS use Charlotte, NC (autofix bad API city names)
                         address = attrs.get('OriginalAddress1', 'N/A')
-                        city = attrs.get('OriginalCity', 'Charlotte')
-                        if address != 'N/A' and city:
-                            address = f"{address}, {city}, NC"
+                        if address != 'N/A':
+                            address = f"{address}, Charlotte, NC"
 
                         # STATE VALIDATION: Only accept North Carolina addresses
                         if not validate_state(address, 'charlotte', self.logger):
