@@ -4,7 +4,7 @@ import csv
 import io
 import time
 import os
-from .utils import retry_with_backoff, setup_logger, ScraperHealthCheck, save_partial_results
+from .utils import retry_with_backoff, setup_logger, ScraperHealthCheck, save_partial_results, validate_state
 
 class SanAntonioPermitScraper:
     def __init__(self):
@@ -63,22 +63,33 @@ class SanAntonioPermitScraper:
                     if len(self.permits) >= max_permits:
                         break
 
-                    # Parse date from CSV
-                    issue_date_str = row.get('IssueDate') or row.get('IssuedDate') or row.get('SubmittedDate') or ''
+                    # Parse date from CSV - San Antonio uses "DATE ISSUED" column
+                    issue_date_str = row.get('DATE ISSUED') or row.get('DATE SUBMITTED') or ''
                     try:
                         if issue_date_str:
                             issue_date = datetime.strptime(issue_date_str[:10], '%Y-%m-%d')
                             if start_date <= issue_date <= end_date:
-                                permit_id = row.get('PermitNumber') or row.get('ApplicationNumber') or ''
+                                permit_id = row.get('PERMIT #') or ''
                                 if permit_id and permit_id not in self.seen_permit_ids:
                                     self.seen_permit_ids.add(permit_id)
+                                    # Build address - ALWAYS use San Antonio, TX (autofix)
+                                    raw_address = row.get('ADDRESS') or 'N/A'
+                                    if raw_address != 'N/A' and 'San Antonio' not in raw_address:
+                                        address = f"{raw_address}, San Antonio, TX"
+                                    else:
+                                        address = raw_address
+
+                                    # STATE VALIDATION: Only accept Texas addresses
+                                    if not validate_state(address, 'sanantonio', self.logger):
+                                        continue  # Skip this record - wrong state
+
                                     self.permits.append({
                                         'permit_number': permit_id,
-                                        'address': row.get('Address') or 'N/A',
-                                        'type': row.get('PermitType') or 'N/A',
-                                        'value': self._parse_cost(row.get('Cost') or 0),
+                                        'address': address,
+                                        'type': row.get('PERMIT TYPE') or 'N/A',
+                                        'value': self._parse_cost(row.get('DECLARED VALUATION') or 0),
                                         'issued_date': issue_date.strftime('%Y-%m-%d'),
-                                        'status': row.get('Status') or 'N/A'
+                                        'status': 'Issued'
                                     })
                                     # Reset failure counter on success
                                     consecutive_failures = 0
