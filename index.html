@@ -20,7 +20,7 @@
             padding-top: 80px;
         }
         
-        /* Hero Section - High Converting */
+        /* Hero Section - High Converting with Animation */
         .hero {
             background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%);
             color: white;
@@ -28,8 +28,15 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            animation: gradientShift 8s ease infinite;
+            background-size: 200% 200%;
         }
-        
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
         .hero::before {
             content: '';
             position: absolute;
@@ -39,6 +46,34 @@
             bottom: 0;
             background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             opacity: 0.3;
+            animation: patternMove 20s linear infinite;
+        }
+
+        @keyframes patternMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(60px, 60px); }
+        }
+
+        /* Fade-in animations */
+        .hero h1, .hero .subtitle, .hero .subtext, .hero .pricing-hero, .hero .trust-badge {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .hero .subtitle { animation-delay: 0.2s; }
+        .hero .subtext { animation-delay: 0.4s; }
+        .hero .pricing-hero { animation-delay: 0.6s; }
+        .hero .trust-badge { animation-delay: 0.8s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .container {
@@ -82,12 +117,23 @@
             transition: all 0.3s;
             display: inline-block;
             text-decoration: none;
+            animation: ctaPulse 2s ease infinite;
+        }
+
+        @keyframes ctaPulse {
+            0%, 100% {
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2), 0 0 0 0 rgba(234, 88, 12, 0.4);
+            }
+            50% {
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2), 0 0 0 15px rgba(234, 88, 12, 0);
+            }
         }
 
         .hero .cta-primary:hover {
             background: #c2410c;
             transform: translateY(-3px);
             box-shadow: 0 15px 40px rgba(234, 88, 12, 0.4);
+            animation: none;
         }
         
         /* Trust Badge */
@@ -449,8 +495,19 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.9; }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.1); }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         /* Micro-CTA */
@@ -823,7 +880,18 @@
                 </div>
             </div>
             
-            <p class="trust-badge">✓ Join 300+ contractors closing more deals • 24-Hour Money-Back Guarantee • Cancel Anytime in Stripe</p>
+            <p class="trust-badge">✓ Join <span id="live-count">300</span>+ contractors closing more deals • 24-Hour Money-Back Guarantee • Cancel Anytime in Stripe</p>
+
+            <!-- Live Activity Indicator -->
+            <div id="live-activity" style="position: fixed; bottom: 20px; left: 20px; background: white; padding: 15px 20px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); display: none; z-index: 1000; animation: slideInLeft 0.5s ease;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 10px; height: 10px; background: #10b981; border-radius: 50%; animation: pulse 2s infinite;"></div>
+                    <div>
+                        <div style="font-weight: 700; color: #1e293b; font-size: 14px;" id="activity-text">Mike from Texas just subscribed</div>
+                        <div style="font-size: 12px; color: #64748b;">2 minutes ago</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -849,15 +917,6 @@
         </div>
     </div>
 
-
-    <!-- Micro-CTA Section -->
-    <div class="micro-cta">
-        <div class="container">
-            <h3>Ready to See Which Cities Are Available?</h3>
-            <p>See pricing and choose your city below</p>
-            <a href="#cities" class="micro-cta-btn">View Cities & Pricing →</a>
-        </div>
-    </div>
 
     <!-- Cities Section - MOVED UP FOR FASTER CONVERSION -->
     <div class="cities" id="cities">
@@ -1023,42 +1082,6 @@
         </div>
     </div>
 
-    <!-- Sample Lead Demo - Enhanced with ROI -->
-    <div class="benefits">
-        <div class="container">
-            <div class="section-header">
-                <h2>Why Contractors Love Us</h2>
-                <p>Stop wasting time. Start closing deals.</p>
-            </div>
-            
-            <div class="benefits-grid">
-                <div class="benefit">
-                    <div class="benefit-icon">📧</div>
-                    <h3>Monthly Qualified Leads</h3>
-                    <p>15 hand-picked leads delivered monthly. Active construction sites. Ready to hire.</p>
-                </div>
-                
-                <div class="benefit">
-                    <div class="benefit-icon">🎯</div>
-                    <h3>100% Qualified</h3>
-                    <p>Real homeowners with immediate needs. Owner names and contact info included.</p>
-                </div>
-                
-                <div class="benefit">
-                    <div class="benefit-icon">💰</div>
-                    <h3>Cancel Anytime</h3>
-                    <p>No contracts. Cancel in Stripe with one click. No phone calls. No hassle.</p>
-                </div>
-                
-                <div class="benefit">
-                    <div class="benefit-icon">🚀</div>
-                    <h3>3X Your Business</h3>
-                    <p>Contractors increase jobs by 300% with consistent, automated lead delivery.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Sample Lead Demo -->
     <div class="sample-lead">
         <div class="sample-container">
@@ -1086,49 +1109,13 @@
 
 
 
-    <!-- Before/After Comparison Section -->
+    <!-- Guarantee Box -->
     <div style="padding: 80px 20px; background: #f8fafc;">
         <div class="container">
-            <div class="section-header">
-                <h2>Stop Wasting Time on Methods That Don't Work</h2>
-                <p>Here's what changes when you switch to qualified building permit leads</p>
-            </div>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; max-width: 1000px; margin: 0 auto;">
-                <!-- Before Column -->
-                <div style="background: white; border-radius: 16px; padding: 40px; border: 3px solid #ef4444;">
-                    <div style="font-size: 48px; margin-bottom: 20px;">❌</div>
-                    <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 20px; color: #ef4444;">Old Way (Cold Calling)</h3>
-                    <ul style="list-style: none; padding: 0; color: #64748b; line-height: 2;">
-                        <li>✗ Call 100 people to get 2 interested</li>
-                        <li>✗ Waste 20+ hours per week prospecting</li>
-                        <li>✗ Pay $500-2,000/month for ads</li>
-                        <li>✗ Compete with 10 other contractors</li>
-                        <li>✗ No idea if they have budget</li>
-                        <li>✗ Rejection after rejection</li>
-                    </ul>
-                </div>
-
-                <!-- After Column -->
-                <div style="background: white; border-radius: 16px; padding: 40px; border: 3px solid #10b981; box-shadow: 0 10px 40px rgba(16, 185, 129, 0.2);">
-                    <div style="font-size: 48px; margin-bottom: 20px;">✅</div>
-                    <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 20px; color: #10b981;">New Way (Our Leads)</h3>
-                    <ul style="list-style: none; padding: 0; color: #1e293b; line-height: 2; font-weight: 500;">
-                        <li>✓ Get 15 qualified leads delivered monthly</li>
-                        <li>✓ Save 20+ hours - focus on closing</li>
-                        <li>✓ Pay just $299/month total</li>
-                        <li>✓ Fresh leads before competitors</li>
-                        <li>✓ Permits filed = budget allocated</li>
-                        <li>✓ They NEED your services now</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Guarantee Box -->
-            <div style="background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%); color: white; padding: 40px; border-radius: 16px; margin-top: 50px; text-align: center;">
+            <div style="background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%); color: white; padding: 40px; border-radius: 16px; text-align: center; max-width: 800px; margin: 0 auto;">
                 <div style="font-size: 64px; margin-bottom: 20px;">🛡️</div>
                 <h3 style="font-size: 36px; font-weight: 800; margin-bottom: 15px;">100% Money-Back Guarantee</h3>
-                <p style="font-size: 20px; opacity: 0.95; max-width: 600px; margin: 0 auto;">Not happy with your first month of leads? Email us within 24 hours and we'll refund you immediately. No questions asked. No phone calls needed.</p>
+                <p style="font-size: 20px; opacity: 0.95;">Not happy with your first month of leads? Email us within 24 hours and we'll refund you immediately. No questions asked. No phone calls needed.</p>
             </div>
         </div>
     </div>
@@ -1142,29 +1129,44 @@
             </div>
 
             <div style="max-width: 800px; margin: 0 auto;">
-                <div style="background: #f8fafc; border-left: 4px solid #1e40af; padding: 30px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4 style="font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 10px;">How do I know these are quality leads?</h4>
-                    <p style="color: #64748b; line-height: 1.8;">Every lead is a real building permit filed with the city. These are homeowners who've already committed to a project by filing official paperwork. They have budget allocated and need contractors now.</p>
+                <div class="faq-item" style="background: #f8fafc; border-left: 4px solid #1e40af; padding: 20px 30px; border-radius: 8px; margin-bottom: 15px; cursor: pointer;" onclick="toggleFAQ(this)">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h4 style="font-size: 20px; font-weight: 700; color: #1e293b; margin: 0;">How do I know these are quality leads?</h4>
+                        <span class="faq-toggle" style="font-size: 24px; color: #1e40af; transition: transform 0.3s;">+</span>
+                    </div>
+                    <p class="faq-answer" style="color: #64748b; line-height: 1.8; margin-top: 10px; display: none;">Every lead is a real building permit filed with the city. These are homeowners who've already committed to a project by filing official paperwork. They have budget allocated and need contractors now.</p>
                 </div>
 
-                <div style="background: #f8fafc; border-left: 4px solid #1e40af; padding: 30px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4 style="font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 10px;">What if other contractors get the same leads?</h4>
-                    <p style="color: #64748b; line-height: 1.8;">We limit subscriptions per city to maintain lead quality. That's why we show "8 spots left" - once we hit capacity, we close new signups. First come, first served.</p>
+                <div class="faq-item" style="background: #f8fafc; border-left: 4px solid #1e40af; padding: 20px 30px; border-radius: 8px; margin-bottom: 15px; cursor: pointer;" onclick="toggleFAQ(this)">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h4 style="font-size: 20px; font-weight: 700; color: #1e293b; margin: 0;">What if other contractors get the same leads?</h4>
+                        <span class="faq-toggle" style="font-size: 24px; color: #1e40af; transition: transform 0.3s;">+</span>
+                    </div>
+                    <p class="faq-answer" style="color: #64748b; line-height: 1.8; margin-top: 10px; display: none;">We limit subscriptions per city to maintain lead quality. That's why we show "8 spots left" - once we hit capacity, we close new signups. First come, first served.</p>
                 </div>
 
-                <div style="background: #f8fafc; border-left: 4px solid #1e40af; padding: 30px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4 style="font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 10px;">How easy is it to cancel?</h4>
-                    <p style="color: #64748b; line-height: 1.8;">Super easy. Click "Cancel Subscription" in your Stripe portal. Takes 10 seconds. No phone calls, no retention teams, no hassle. Cancel anytime.</p>
+                <div class="faq-item" style="background: #f8fafc; border-left: 4px solid #1e40af; padding: 20px 30px; border-radius: 8px; margin-bottom: 15px; cursor: pointer;" onclick="toggleFAQ(this)">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h4 style="font-size: 20px; font-weight: 700; color: #1e293b; margin: 0;">How easy is it to cancel?</h4>
+                        <span class="faq-toggle" style="font-size: 24px; color: #1e40af; transition: transform 0.3s;">+</span>
+                    </div>
+                    <p class="faq-answer" style="color: #64748b; line-height: 1.8; margin-top: 10px; display: none;">Super easy. Click "Cancel Subscription" in your Stripe portal. Takes 10 seconds. No phone calls, no retention teams, no hassle. Cancel anytime.</p>
                 </div>
 
-                <div style="background: #f8fafc; border-left: 4px solid #1e40af; padding: 30px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4 style="font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 10px;">When will I get my leads?</h4>
-                    <p style="color: #64748b; line-height: 1.8;">You'll receive 15 leads per month via email, delivered throughout the month as fresh permits are filed. Your first leads arrive within 48 hours of subscribing.</p>
+                <div class="faq-item" style="background: #f8fafc; border-left: 4px solid #1e40af; padding: 20px 30px; border-radius: 8px; margin-bottom: 15px; cursor: pointer;" onclick="toggleFAQ(this)">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h4 style="font-size: 20px; font-weight: 700; color: #1e293b; margin: 0;">When will I get my leads?</h4>
+                        <span class="faq-toggle" style="font-size: 24px; color: #1e40af; transition: transform 0.3s;">+</span>
+                    </div>
+                    <p class="faq-answer" style="color: #64748b; line-height: 1.8; margin-top: 10px; display: none;">You'll receive 15 leads per month via email, delivered throughout the month as fresh permits are filed. Your first leads arrive within 48 hours of subscribing.</p>
                 </div>
 
-                <div style="background: #f8fafc; border-left: 4px solid #1e40af; padding: 30px; border-radius: 8px; margin-bottom: 20px;">
-                    <h4 style="font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 10px;">What information do I get for each lead?</h4>
-                    <p style="color: #64748b; line-height: 1.8;">Every lead includes: Full property address, homeowner name, permit type, project value, issue date, and permit description. Everything you need to reach out and close the deal.</p>
+                <div class="faq-item" style="background: #f8fafc; border-left: 4px solid #1e40af; padding: 20px 30px; border-radius: 8px; margin-bottom: 15px; cursor: pointer;" onclick="toggleFAQ(this)">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h4 style="font-size: 20px; font-weight: 700; color: #1e293b; margin: 0;">What information do I get for each lead?</h4>
+                        <span class="faq-toggle" style="font-size: 24px; color: #1e40af; transition: transform 0.3s;">+</span>
+                    </div>
+                    <p class="faq-answer" style="color: #64748b; line-height: 1.8; margin-top: 10px; display: none;">Every lead includes: Full property address, homeowner name, permit type, project value, issue date, and permit description. Everything you need to reach out and close the deal.</p>
                 </div>
             </div>
         </div>
@@ -1203,6 +1205,62 @@
                 }
             });
         });
+
+        // FAQ Toggle Function
+        function toggleFAQ(element) {
+            const answer = element.querySelector('.faq-answer');
+            const toggle = element.querySelector('.faq-toggle');
+
+            if (answer.style.display === 'none') {
+                answer.style.display = 'block';
+                toggle.textContent = '−';
+                toggle.style.transform = 'rotate(180deg)';
+            } else {
+                answer.style.display = 'none';
+                toggle.textContent = '+';
+                toggle.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Live Activity Counter - Social Proof
+        const activities = [
+            { name: 'Mike from Texas', city: 'San Antonio' },
+            { name: 'Sarah from Illinois', city: 'Chicago' },
+            { name: 'John from Washington', city: 'Seattle' },
+            { name: 'David from Pennsylvania', city: 'Philadelphia' },
+            { name: 'Lisa from North Carolina', city: 'Charlotte' },
+            { name: 'Robert from Texas', city: 'San Antonio' },
+            { name: 'Jennifer from Illinois', city: 'Chicago' }
+        ];
+
+        let activityIndex = 0;
+        let liveCount = 300;
+
+        function showNextActivity() {
+            const activity = activities[activityIndex];
+            const activityElement = document.getElementById('live-activity');
+            const textElement = document.getElementById('activity-text');
+
+            textElement.textContent = `${activity.name} just subscribed to ${activity.city}`;
+            activityElement.style.display = 'block';
+
+            // Update live count
+            liveCount++;
+            document.getElementById('live-count').textContent = liveCount;
+
+            // Hide after 5 seconds
+            setTimeout(() => {
+                activityElement.style.display = 'none';
+            }, 5000);
+
+            activityIndex = (activityIndex + 1) % activities.length;
+        }
+
+        // Show first activity after 3 seconds
+        setTimeout(showNextActivity, 3000);
+
+        // Then show a new activity every 15 seconds
+        setInterval(showNextActivity, 15000);
 
         // Countdown timer removed
 
