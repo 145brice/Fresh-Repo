@@ -707,64 +707,151 @@
         
         /* Mobile Responsive */
         @media (max-width: 768px) {
+            body {
+                padding-top: 60px;
+            }
+
+            header {
+                padding: 10px 0 !important;
+            }
+
+            header div {
+                font-size: 18px !important;
+            }
+
+            header nav {
+                gap: 10px !important;
+            }
+
+            header nav a {
+                padding: 6px 12px !important;
+                font-size: 14px !important;
+            }
+
+            .hero {
+                padding: 40px 15px 60px;
+            }
+
             .hero h1 {
-                font-size: 36px;
+                font-size: 28px;
+                line-height: 1.2;
             }
-            
+
             .hero .subtitle {
-                font-size: 18px;
+                font-size: 16px;
             }
-            
+
+            .hero .subtext {
+                font-size: 14px;
+            }
+
             .hero .cta-primary {
-                padding: 16px 40px;
-                font-size: 18px;
+                padding: 14px 30px !important;
+                font-size: 16px !important;
             }
-            
+
+            .trust-badge {
+                font-size: 12px;
+            }
+
             .section-header h2 {
-                font-size: 32px;
+                font-size: 24px;
             }
-            
-            .cities-table {
-                overflow-x: auto;
+
+            .section-header p {
+                font-size: 14px;
             }
-            
-            .cities-table table {
-                min-width: 600px;
+
+            /* Stats grid - stack vertically */
+            .stats {
+                padding: 40px 15px;
             }
-            
-            .cities-list {
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
                 gap: 15px;
             }
-            
+
+            .stat-number {
+                font-size: 32px;
+            }
+
+            .stat-label {
+                font-size: 12px;
+            }
+
+            /* Cities section */
+            .cities {
+                padding: 40px 15px;
+            }
+
+            .urgency-banner {
+                font-size: 12px;
+                padding: 10px 15px;
+                margin-bottom: 20px;
+            }
+
+            /* Cities grid - stack vertically on mobile */
+            .cities-grid {
+                grid-template-columns: 1fr !important;
+                gap: 15px !important;
+                padding: 0 !important;
+            }
+
             .city-item {
-                padding: 20px;
+                padding: 15px;
             }
-            
+
             .city-name {
-                font-size: 20px;
+                font-size: 18px;
             }
-            
+
             .city-price {
-                font-size: 28px;
-            }
-            
-            .sample-email {
-                padding: 20px;
-                font-size: 13px;
-            }
-            
-            .sample-header h2 {
                 font-size: 24px;
+            }
+
+            .city-subtext {
+                font-size: 11px;
+            }
+
+            .city-btn {
+                font-size: 13px;
+                padding: 10px 16px;
+            }
+
+            /* Testimonials */
+            .testimonials {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            /* ROI Calculator */
+            .roi-calculator {
+                padding: 30px 20px;
+            }
+
+            /* Sample lead */
+            .sample-lead {
+                padding: 40px 15px;
+            }
+
+            .sample-email {
+                padding: 15px;
+                font-size: 12px;
+            }
+
+            .sample-header h2 {
+                font-size: 20px;
             }
 
             /* Mobile pricing layout */
             .hero .pricing-hero {
-                padding: 20px;
+                padding: 15px;
             }
 
             .hero .pricing-hero .pricing-grid {
                 flex-direction: column;
-                gap: 30px;
+                gap: 20px;
             }
 
             .hero .pricing-hero .pricing-option {
@@ -772,7 +859,38 @@
             }
 
             .hero .pricing-hero .pricing-option .price {
-                font-size: 32px;
+                font-size: 28px;
+            }
+
+            /* FAQ */
+            div[style*="padding: 80px"] {
+                padding: 40px 15px !important;
+            }
+
+            .faq-item h4 {
+                font-size: 16px !important;
+            }
+
+            .faq-answer {
+                font-size: 14px !important;
+            }
+
+            /* Final CTA */
+            .cta-section {
+                padding: 40px 15px;
+            }
+
+            .cta-section h2 {
+                font-size: 24px;
+            }
+
+            .cta-section p {
+                font-size: 14px;
+            }
+
+            /* Live activity popup - hide on mobile to save space */
+            #live-activity {
+                display: none !important;
             }
         }
 
